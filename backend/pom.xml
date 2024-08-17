@@ -75,13 +75,6 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- 这个依赖用于集成 Springdoc OpenAPI 到你的 Spring Boot 应用程序中。Springdoc OpenAPI 是一个用于生成 OpenAPI (Swagger) 文档的库，提供了 API 文档的自动生成和用户界面。 -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
