@@ -10,13 +10,13 @@
     </q-header>
 
     <!-- 主要內容區域 -->
-    <q-page-container>
-      <q-page>
+    <q-page-container class="custom-page-container">
+      <q-page class="q-pa-md">
         <!-- 步驟條 -->
         <q-stepper v-model="step" animated>
           <!-- 步驟 1: 申請資料 -->
           <q-step name="step1" title="申請資料">
-            <div>
+            <div class="center-content">
               <h6>申請資料</h6>
               <!-- 這裡是步驟 1 的內容 -->
               <q-form @submit.prevent="nextStep" @validation-error="showErrors">
@@ -108,53 +108,58 @@
                       />
                     </q-item-section>
                   </q-item>
-
-                  <!-- 勾選框 -->
-                  <q-item>
-                    <q-item-section class="label">
-                      <q-checkbox
-                        v-model="formData.termsAccepted"
-                        label="我已詳細閱讀並充分了解、同意「隱私權政策」及「行動身分識別服務使用者約定條款及隱私權告知條款」*"
-                        :rules="[(value) => value || '必須同意條款']"
-                      />
-                    </q-item-section>
-                  </q-item>
                 </div>
-                <q-btn type="submit" label="Next" color="primary" />
+                <!-- 勾選框 -->
+                <div class="checkbox-container">
+                  <q-checkbox v-model="val" />
+                  <span class="checkbox-label"
+                    >＊我已詳細閱讀並充分了解、同意「 隱私權政策 」及「
+                    行動身分識別服務使用者約定條款及隱私權告知條款 」。</span
+                  >
+                </div>
+                <div class="button-container">
+                  <q-btn type="submit" label="下一步" color="primary" />
+                </div>
               </q-form>
             </div>
           </q-step>
 
           <!-- 步驟 2: OTP 認證 -->
           <q-step name="step2" title="OTP認證">
-            <div>
+            <div class="center-content">
               <h6>OTP 認證</h6>
               <q-form @submit.prevent="nextStep">
                 <q-input filled v-model="formData.otp" label="OTP" />
-                <q-btn type="submit" label="Next" color="primary" />
-                <q-btn @click="prevStep" label="Back" color="secondary" />
+                <div class="button-container">
+                  <q-btn type="submit" label="Next" color="primary" />
+                  <q-btn @click="prevStep" label="Back" color="secondary" />
+                </div>
               </q-form>
             </div>
           </q-step>
 
           <!-- 步驟 3: 證件照片 -->
           <q-step name="step3" title="證件照片">
-            <div>
+            <div class="center-content">
               <h6>證件照片</h6>
               <q-form @submit.prevent="nextStep">
                 <q-file filled v-model="formData.photo" label="上傳證件照片" />
-                <q-btn type="submit" label="Next" color="primary" />
-                <q-btn @click="prevStep" label="Back" color="secondary" />
+                <div class="button-container">
+                  <q-btn type="submit" label="Next" color="primary" />
+                  <q-btn @click="prevStep" label="Back" color="secondary" />
+                </div>
               </q-form>
             </div>
           </q-step>
 
           <!-- 步驟 4: 開始審核 -->
           <q-step name="step4" title="開始審核">
-            <div>
+            <div class="center-content">
               <h6>開始審核</h6>
               <p>您的申請正在審核中。</p>
-              <q-btn @click="prevStep" label="Back" color="secondary" />
+              <div class="button-container">
+                <q-btn @click="prevStep" label="Back" color="secondary" />
+              </div>
             </div>
           </q-step>
         </q-stepper>
@@ -167,6 +172,7 @@
 import { ref } from "vue";
 
 const step = ref("step1"); // 初始步驟
+const val = ref(false); // 勾選框
 const formData = ref({
   storeName: "",
   productName1: "",
@@ -238,5 +244,36 @@ const showErrors = () => {
 
 .label {
   font-weight: bold;
+}
+
+.custom-page-container {
+  max-width: 800px; /* 设定最大宽度 */
+  margin: 0 auto; /* 居中显示 */
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px; /* 按钮间距 */
+  justify-content: center;
+  margin-top: 20px; /* 按钮与表单内容的间距 */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  width: 100%; /* 确保容器宽度为100% */
+  margin-bottom: 20px; /* 为 checkbox 和其他元素之间的间距 */
+}
+
+.checkbox-label {
+  margin-left: 8px; /* Checkbox 与文本之间的间距 */
+  word-break: break-word; /* 强制文本换行 */
+  flex: 1; /* 使文本占据剩余空间 */
 }
 </style>
