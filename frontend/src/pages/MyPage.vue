@@ -116,9 +116,56 @@
                 <div class="checkbox-container q-mt-md">
                   <q-checkbox v-model="val" />
                   <span class="checkbox-label">
-                    ＊我已詳細閱讀並充分了解、同意「隱私權政策」及「行動身分識別服務使用者約定條款及隱私權告知條款」。
+                    ＊我已詳細閱讀並充分了解、同意
+                    <a href="#" @click.prevent="showPrivacyPolicyDialog"
+                      >「隱私權政策」</a
+                    >
+                    及
+                    <a href="#" @click.prevent="showTermsDialog"
+                      >「行動身分識別服務使用者約定條款及隱私權告知條款」</a
+                    >。
                   </span>
                 </div>
+
+                <!-- 彈出視窗 -->
+                <q-dialog v-model="isPrivacyPolicyDialogOpen" persistent>
+                  <q-card>
+                    <q-card-section>
+                      <div class="text-h6">隱私權政策</div>
+                    </q-card-section>
+                    <q-card-section class="q-pt-none">
+                      <p>這裡放隱私權政策的內容...</p>
+                    </q-card-section>
+                    <q-card-actions align="right">
+                      <q-btn
+                        flat
+                        label="關閉"
+                        color="primary"
+                        @click="isPrivacyPolicyDialogOpen = false"
+                      />
+                    </q-card-actions>
+                  </q-card>
+                </q-dialog>
+                <q-dialog v-model="isTermsDialogOpen" persistent>
+                  <q-card>
+                    <q-card-section>
+                      <div class="text-h6">
+                        行動身分識別服務使用者約定條款及隱私權告知條款
+                      </div>
+                    </q-card-section>
+                    <q-card-section class="q-pt-none">
+                      <p>這裡放條款的內容...</p>
+                    </q-card-section>
+                    <q-card-actions align="right">
+                      <q-btn
+                        flat
+                        label="關閉"
+                        color="primary"
+                        @click="isTermsDialogOpen = false"
+                      />
+                    </q-card-actions>
+                  </q-card>
+                </q-dialog>
 
                 <div class="button-container q-mt-md">
                   <q-btn type="submit" label="下一步" color="primary" />
@@ -134,8 +181,8 @@
               <q-form @submit.prevent="nextStep">
                 <q-input filled v-model="formData.otp" label="OTP" />
                 <div class="button-container">
-                  <q-btn type="submit" label="Next" color="primary" />
                   <q-btn @click="prevStep" label="Back" color="secondary" />
+                  <q-btn type="submit" label="Next" color="primary" />
                 </div>
               </q-form>
             </div>
@@ -148,8 +195,8 @@
               <q-form @submit.prevent="nextStep">
                 <q-file filled v-model="formData.photo" label="上傳證件照片" />
                 <div class="button-container">
-                  <q-btn type="submit" label="Next" color="primary" />
                   <q-btn @click="prevStep" label="Back" color="secondary" />
+                  <q-btn type="submit" label="Next" color="primary" />
                 </div>
               </q-form>
             </div>
@@ -176,6 +223,17 @@ import { ref } from "vue";
 
 const step = ref("step1"); // 初始步驟
 const val = ref(false); // 勾選框
+
+const isPrivacyPolicyDialogOpen = ref(false);
+const isTermsDialogOpen = ref(false);
+
+const showPrivacyPolicyDialog = () => {
+  isPrivacyPolicyDialogOpen.value = true;
+};
+
+const showTermsDialog = () => {
+  isTermsDialogOpen.value = true;
+};
 const formData = ref({
   storeName: "",
   productName1: "",
