@@ -22,7 +22,9 @@
               <q-form @submit.prevent="nextStep" @validation-error="showErrors">
                 <!-- 商店/網站名稱 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">商店/網站名稱</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">
+                    商店/網站名稱
+                  </div>
                   <div class="col-6">
                     <q-input filled v-model="formData.storeName" />
                   </div>
@@ -30,7 +32,7 @@
 
                 <!-- 產品名稱 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">產品名稱</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">產品名稱</div>
                   <div class="col-6">
                     <q-input filled v-model="formData.productName1" />
                   </div>
@@ -38,7 +40,7 @@
 
                 <!-- 產品金額 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">產品金額*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">產品金額*</div>
                   <div class="col-6">
                     <q-input
                       filled
@@ -51,7 +53,7 @@
 
                 <!-- 分期期數 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">分期期數*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">分期期數*</div>
                   <div class="col-6">
                     <q-select
                       v-model="formData.installmentPeriod"
@@ -64,7 +66,7 @@
 
                 <!-- 期付金額 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">期付金額</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">期付金額</div>
                   <div class="col-6">
                     <q-input
                       filled
@@ -76,7 +78,7 @@
 
                 <!-- 手機門號 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">手機門號*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">手機門號*</div>
                   <div class="col-6">
                     <q-input
                       filled
@@ -89,7 +91,7 @@
 
                 <!-- E-mail -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">E-mail</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">E-mail</div>
                   <div class="col-6">
                     <q-input filled v-model="formData.email" type="email" />
                   </div>
@@ -97,7 +99,9 @@
 
                 <!-- 可接聽時間 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs">可接聽時間*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">
+                    可接聽時間*
+                  </div>
                   <div class="col-6">
                     <q-select
                       v-model="formData.availableTime"
