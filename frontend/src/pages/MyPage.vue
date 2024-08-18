@@ -40,7 +40,9 @@
 
                 <!-- 產品金額 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">產品金額*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">
+                    產品金額<span class="required">*</span>
+                  </div>
                   <div class="col-6">
                     <q-input
                       filled
@@ -53,7 +55,9 @@
 
                 <!-- 分期期數 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">分期期數*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">
+                    分期期數<span class="required">*</span>
+                  </div>
                   <div class="col-6">
                     <q-select
                       v-model="formData.installmentPeriod"
@@ -78,7 +82,9 @@
 
                 <!-- 手機門號 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">手機門號*</div>
+                  <div class="col-3 text-right q-pa-xs q-pr-md">
+                    手機門號<span class="required">*</span>
+                  </div>
                   <div class="col-6">
                     <q-input
                       filled
@@ -100,7 +106,7 @@
                 <!-- 可接聽時間 -->
                 <div class="row items-center q-mb-md">
                   <div class="col-3 text-right q-pa-xs q-pr-md">
-                    可接聽時間*
+                    可接聽時間<span class="required">*</span>
                   </div>
                   <div class="col-6">
                     <q-select
@@ -326,5 +332,9 @@ const showErrors = () => {
   margin-left: 8px; /* Checkbox 与文本之间的间距 */
   word-break: break-word; /* 强制文本换行 */
   flex: 1; /* 使文本占据剩余空间 */
+}
+
+.required {
+  color: red; /* 將*號設為紅色 */
 }
 </style>
