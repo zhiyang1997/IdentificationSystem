@@ -20,104 +20,103 @@
               <h6>申請資料</h6>
               <!-- 這裡是步驟 1 的內容 -->
               <q-form @submit.prevent="nextStep" @validation-error="showErrors">
-                <div class="form-table">
-                  <!-- 商店/網站名稱 -->
-                  <q-item>
-                    <q-item-section class="label">商店/網站名稱</q-item-section>
-                    <q-item-section>
-                      <q-input filled v-model="formData.storeName" />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- 產品名稱 -->
-                  <q-item>
-                    <q-item-section class="label">產品名稱</q-item-section>
-                    <q-item-section>
-                      <q-input filled v-model="formData.productName1" />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- 產品金額 -->
-                  <q-item>
-                    <q-item-section class="label">產品金額*</q-item-section>
-                    <q-item-section>
-                      <q-input
-                        filled
-                        v-model="formData.productPrice"
-                        type="number"
-                        :rules="[(value) => !!value || '產品金額為必填欄位']"
-                      />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- 分期期數 -->
-                  <q-item>
-                    <q-item-section class="label">分期期數*</q-item-section>
-                    <q-item-section>
-                      <q-select
-                        v-model="formData.installmentPeriod"
-                        :options="installmentOptions"
-                        filled
-                        :rules="[(value) => !!value || '分期期數為必填欄位']"
-                      />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- 期付金額 -->
-                  <q-item>
-                    <q-item-section class="label">期付金額</q-item-section>
-                    <q-item-section>
-                      <q-input
-                        filled
-                        v-model="formData.installmentAmount"
-                        type="number"
-                      />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- 手機門號 -->
-                  <q-item>
-                    <q-item-section class="label">手機門號*</q-item-section>
-                    <q-item-section>
-                      <q-input
-                        filled
-                        v-model="formData.phoneNumber"
-                        type="tel"
-                        :rules="[(value) => !!value || '手機門號為必填欄位']"
-                      />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- E-mail -->
-                  <q-item>
-                    <q-item-section class="label">E-mail</q-item-section>
-                    <q-item-section>
-                      <q-input filled v-model="formData.email" type="email" />
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- 可接聽時間 -->
-                  <q-item>
-                    <q-item-section class="label">可接聽時間*</q-item-section>
-                    <q-item-section>
-                      <q-select
-                        v-model="formData.availableTime"
-                        :options="availableTimeOptions"
-                        filled
-                        :rules="[(value) => !!value || '可接聽時間為必填欄位']"
-                      />
-                    </q-item-section>
-                  </q-item>
+                <!-- 商店/網站名稱 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">商店/網站名稱</div>
+                  <div class="col-6">
+                    <q-input filled v-model="formData.storeName" />
+                  </div>
                 </div>
+
+                <!-- 產品名稱 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">產品名稱</div>
+                  <div class="col-6">
+                    <q-input filled v-model="formData.productName1" />
+                  </div>
+                </div>
+
+                <!-- 產品金額 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">產品金額*</div>
+                  <div class="col-6">
+                    <q-input
+                      filled
+                      v-model="formData.productPrice"
+                      type="number"
+                      :rules="[(value) => !!value || '產品金額為必填欄位']"
+                    />
+                  </div>
+                </div>
+
+                <!-- 分期期數 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">分期期數*</div>
+                  <div class="col-6">
+                    <q-select
+                      v-model="formData.installmentPeriod"
+                      :options="installmentOptions"
+                      filled
+                      :rules="[(value) => !!value || '分期期數為必填欄位']"
+                    />
+                  </div>
+                </div>
+
+                <!-- 期付金額 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">期付金額</div>
+                  <div class="col-6">
+                    <q-input
+                      filled
+                      v-model="formData.installmentAmount"
+                      type="number"
+                    />
+                  </div>
+                </div>
+
+                <!-- 手機門號 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">手機門號*</div>
+                  <div class="col-6">
+                    <q-input
+                      filled
+                      v-model="formData.phoneNumber"
+                      type="tel"
+                      :rules="[(value) => !!value || '手機門號為必填欄位']"
+                    />
+                  </div>
+                </div>
+
+                <!-- E-mail -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">E-mail</div>
+                  <div class="col-6">
+                    <q-input filled v-model="formData.email" type="email" />
+                  </div>
+                </div>
+
+                <!-- 可接聽時間 -->
+                <div class="row items-center q-mb-md">
+                  <div class="col-3 text-right q-pa-xs">可接聽時間*</div>
+                  <div class="col-6">
+                    <q-select
+                      v-model="formData.availableTime"
+                      :options="availableTimeOptions"
+                      filled
+                      :rules="[(value) => !!value || '可接聽時間為必填欄位']"
+                    />
+                  </div>
+                </div>
+
                 <!-- 勾選框 -->
-                <div class="checkbox-container">
+                <div class="checkbox-container q-mt-md">
                   <q-checkbox v-model="val" />
-                  <span class="checkbox-label"
-                    >＊我已詳細閱讀並充分了解、同意「 隱私權政策 」及「
-                    行動身分識別服務使用者約定條款及隱私權告知條款 」。</span
-                  >
+                  <span class="checkbox-label">
+                    ＊我已詳細閱讀並充分了解、同意「隱私權政策」及「行動身分識別服務使用者約定條款及隱私權告知條款」。
+                  </span>
                 </div>
-                <div class="button-container">
+
+                <div class="button-container q-mt-md">
                   <q-btn type="submit" label="下一步" color="primary" />
                 </div>
               </q-form>
@@ -230,16 +229,6 @@ const showErrors = () => {
 
 .header-logo {
   height: 60px; /* 調整圖片高度 */
-}
-
-.form-table {
-  display: grid;
-  grid-template-columns: 1fr 2fr; /* 1fr 為欄位寬度，2fr 為內容寬度 */
-  gap: 10px; /* 欄位和內容間的間距 */
-}
-
-.q-item {
-  display: contents; /* 使 q-item 不影響 grid 的布局 */
 }
 
 .label {
