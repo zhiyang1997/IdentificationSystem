@@ -64,6 +64,7 @@
                       :options="installmentOptions"
                       filled
                       :rules="[(value) => !!value || '分期期數為必填欄位']"
+                      :disable="!formData.productPrice"
                     />
                   </div>
                 </div>
@@ -76,6 +77,7 @@
                       filled
                       v-model="formData.installmentAmount"
                       type="number"
+                      readonly
                     />
                   </div>
                 </div>
@@ -225,7 +227,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const step = ref("step1"); // 初始步驟
 const val = ref(false); // 勾選框
@@ -240,12 +242,13 @@ const showPrivacyPolicyDialog = () => {
 const showTermsDialog = () => {
   isTermsDialogOpen.value = true;
 };
+
 const formData = ref({
   storeName: "",
   productName1: "",
   productName2: "",
   productPrice: "",
-  installmentPeriod: null,
+  installmentPeriod: "請選擇期數",
   installmentAmount: "",
   phoneNumber: "",
   email: "",
@@ -254,6 +257,7 @@ const formData = ref({
 });
 
 const installmentOptions = [
+  { label: "請選擇期數", value: NaN },
   { label: "1期", value: 1 },
   { label: "3期", value: 3 },
   { label: "6期", value: 6 },
@@ -265,6 +269,33 @@ const availableTimeOptions = [
   { label: "下午", value: "PM" },
   { label: "晚上", value: "Evening" },
 ];
+
+watch(
+  () => formData.value.productPrice,
+  (newPrice) => {
+    if (!newPrice) {
+      formData.value.installmentPeriod = null;
+    }
+  }
+);
+
+watch(
+  () => [formData.value.productPrice, formData.value.installmentPeriod],
+  ([newPrice, newPeriod]) => {
+    const price = parseFloat(newPrice);
+    const period = parseInt(newPeriod?.value, 10);
+
+    console.log("Selected Period:", newPeriod);
+    console.log("Parsed Period:", period);
+
+    if (!isNaN(price) && !isNaN(period) && period > 0) {
+      const rawAmount = (price * 1.04) / period;
+      formData.value.installmentAmount = Math.round(rawAmount);
+    } else {
+      formData.value.installmentAmount = ""; // 清空显示的值
+    }
+  }
+);
 
 const nextStep = () => {
   const steps = ["step1", "step2", "step3", "step4"];
