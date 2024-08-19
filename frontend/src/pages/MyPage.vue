@@ -26,7 +26,13 @@
                     商店/網站名稱
                   </div>
                   <div class="col-6">
-                    <q-input filled v-model="formData.storeName" />
+                    <q-input
+                      clearable
+                      filled
+                      color="blue-12"
+                      v-model="formData.storeName"
+                      label="Shop/Web"
+                    />
                   </div>
                 </div>
 
@@ -34,7 +40,13 @@
                 <div class="row items-center q-mb-md">
                   <div class="col-3 text-right q-pa-xs q-pr-md">產品名稱</div>
                   <div class="col-6">
-                    <q-input filled v-model="formData.productName1" />
+                    <q-input
+                      clearable
+                      filled
+                      color="blue-12"
+                      v-model="formData.productName1"
+                      label="Product"
+                    />
                   </div>
                 </div>
 
@@ -45,10 +57,12 @@
                   </div>
                   <div class="col-6">
                     <q-input
+                      clearable
                       filled
+                      color="blue-12"
                       v-model="formData.productPrice"
-                      type="number"
                       :rules="[(value) => !!value || '產品金額為必填欄位']"
+                      label="Cash"
                     />
                   </div>
                 </div>
@@ -89,10 +103,13 @@
                   </div>
                   <div class="col-6">
                     <q-input
+                      clearable
                       filled
+                      color="blue-12"
                       v-model="formData.phoneNumber"
                       type="tel"
                       :rules="[(value) => !!value || '手機門號為必填欄位']"
+                      label="PhoneNuber"
                     />
                   </div>
                 </div>
@@ -101,7 +118,14 @@
                 <div class="row items-center q-mb-md">
                   <div class="col-3 text-right q-pa-xs q-pr-md">E-mail</div>
                   <div class="col-6">
-                    <q-input filled v-model="formData.email" type="email" />
+                    <q-input
+                      clearable
+                      filled
+                      color="blue-12"
+                      v-model="formData.email"
+                      type="email"
+                      label="E-mail"
+                    />
                   </div>
                 </div>
 
@@ -187,7 +211,23 @@
             <div class="center-content">
               <h6>OTP 認證</h6>
               <q-form @submit.prevent="nextStep">
-                <q-input filled v-model="formData.otp" label="OTP" />
+                <!-- OTP输入框 -->
+                <div class="q-gutter-md row justify-center">
+                  <q-input
+                    v-for="(digit, index) in otpDigits"
+                    :key="index"
+                    v-model="otpDigits[index]"
+                    type="text"
+                    maxlength="1"
+                    filled
+                    outlined
+                    input-class="text-center"
+                    ref="otpInput"
+                    @input="onInput(index)"
+                    @keyup="onInput(index)"
+                    input-style="font-weight: bold; color: gray; font-size: 24px;"
+                  />
+                </div>
                 <div class="button-container">
                   <q-btn @click="prevStep" label="Back" color="secondary" />
                   <q-btn type="submit" label="Next" color="primary" />
@@ -227,9 +267,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 
-const step = ref("step1"); // 初始步驟
+const step = ref("step2"); // 初始步驟
 const val = ref(false); // 勾選框
 
 const isPrivacyPolicyDialogOpen = ref(false);
@@ -257,7 +297,7 @@ const formData = ref({
 });
 
 const installmentOptions = [
-  { label: "請選擇期數", value: NaN },
+  { label: "請選擇期數", value: null },
   { label: "1期", value: 1 },
   { label: "3期", value: 3 },
   { label: "6期", value: 6 },
@@ -318,6 +358,39 @@ const showErrors = () => {
   // Here you can handle the errors as needed
   // E.g., show a toast or alert if there are validation errors
 };
+
+const otpDigits = ref(Array(6).fill("")); // 存储6位OTP
+
+const onInput = async (index) => {
+  console.log(`Input at index ${index}:`, otpDigits.value[index]);
+
+  if (
+    otpDigits.value[index].length === 1 &&
+    index < otpDigits.value.length - 1
+  ) {
+    console.log(`Attempting to move focus from index ${index} to ${index + 1}`);
+    await nextTick();
+    const nextInput =
+      document.querySelectorAll('input[type="text"]')[index + 1];
+    console.log("Next input element:", nextInput);
+    if (nextInput) {
+      nextInput.focus();
+      console.log(`Focus moved to input at index ${index + 1}`);
+    }
+  }
+
+  if (otpDigits.value[index] === "" && index > 0) {
+    console.log(`Attempting to move focus from index ${index} to ${index - 1}`);
+    await nextTick();
+    const prevInput =
+      document.querySelectorAll('input[type="text"]')[index - 1];
+    console.log("Previous input element:", prevInput);
+    if (prevInput) {
+      prevInput.focus();
+      console.log(`Focus moved to input at index ${index - 1}`);
+    }
+  }
+};
 </script>
 
 <style>
@@ -367,5 +440,13 @@ const showErrors = () => {
 
 .required {
   color: red; /* 將*號設為紅色 */
+}
+
+.q-gutter-md .q-input {
+  width: 40px; /* 调整宽度以适应每个字符 */
+}
+
+.q-input .q-field__control {
+  text-align: center; /* 将字符置中 */
 }
 </style>
