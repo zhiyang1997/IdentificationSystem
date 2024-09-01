@@ -11,9 +11,9 @@ import java.security.SecureRandom;
 public class OtpService {
 
     // Twilio Account SID 和 Auth Token 
-    private final String ACCOUNT_SID = "";
-    private final String AUTH_TOKEN = "";
-    private final String FROM_PHONE_NUMBER = "";
+    private final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+    private final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
+    private final String FROM_PHONE_NUMBER = System.getenv("TWILIO_FROM_PHONE_NUMBER");
 
     public OtpService() {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
