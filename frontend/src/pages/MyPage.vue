@@ -268,8 +268,13 @@
 
 <script setup>
 import { ref, watch, nextTick } from "vue";
+import { useFormStore } from "../stores/formStore";
+import axios from "axios";
+import { computed } from "vue";
+// 使用 Pinia store
+const formStore = useFormStore();
 
-const step = ref("step2"); // 初始步驟
+const step = ref("step1"); // 初始步驟
 const val = ref(false); // 勾選框
 
 const isPrivacyPolicyDialogOpen = ref(false);
@@ -283,18 +288,8 @@ const showTermsDialog = () => {
   isTermsDialogOpen.value = true;
 };
 
-const formData = ref({
-  storeName: "",
-  productName1: "",
-  productName2: "",
-  productPrice: "",
-  installmentPeriod: "請選擇期數",
-  installmentAmount: "",
-  phoneNumber: "",
-  email: "",
-  availableTime: null,
-  termsAccepted: false,
-});
+// 使用 formStore 的数据
+const formData = computed(() => formStore.formData);
 
 const installmentOptions = [
   { label: "請選擇期數", value: null },
@@ -311,35 +306,63 @@ const availableTimeOptions = [
 ];
 
 watch(
-  () => formData.value.productPrice,
+  () => formStore.formData.productPrice,
   (newPrice) => {
     if (!newPrice) {
-      formData.value.installmentPeriod = null;
+      formStore.formData.installmentPeriod = null;
     }
   }
 );
 
 watch(
-  () => [formData.value.productPrice, formData.value.installmentPeriod],
+  () => [formStore.formData.productPrice, formStore.formData.installmentPeriod],
   ([newPrice, newPeriod]) => {
     const price = parseFloat(newPrice);
     const period = parseInt(newPeriod?.value, 10);
 
-    console.log("Selected Period:", newPeriod);
-    console.log("Parsed Period:", period);
-
     if (!isNaN(price) && !isNaN(period) && period > 0) {
       const rawAmount = (price * 1.04) / period;
-      formData.value.installmentAmount = Math.round(rawAmount);
+      formStore.formData.installmentAmount = Math.round(rawAmount);
     } else {
-      formData.value.installmentAmount = ""; // 清空显示的值
+      formStore.formData.installmentAmount = ""; // 清空显示的值
     }
   }
 );
 
-const nextStep = () => {
+const sendOtpRequest = async (phoneNumber) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/otp/send",
+      null,
+      {
+        params: {
+          phoneNumber: phoneNumber,
+        },
+      }
+    );
+    return response.data; // 返回后端的响应数据
+  } catch (error) {
+    console.error("发送 OTP 失败:", error);
+    throw error;
+  }
+};
+
+const nextStep = async () => {
   const steps = ["step1", "step2", "step3", "step4"];
   const currentIndex = steps.indexOf(step.value);
+
+  if (currentIndex === 0) {
+    // 假设在第一个步骤时发送 OTP
+    try {
+      await sendOtpRequest(formData.value.phoneNumber);
+      console.log("OTP 已成功发送");
+    } catch (error) {
+      // 处理发送失败的情况，比如显示错误消息
+      console.error("无法发送 OTP");
+      return; // 阻止进入下一步
+    }
+  }
+
   if (currentIndex < steps.length - 1) {
     step.value = steps[currentIndex + 1];
   }
@@ -359,35 +382,24 @@ const showErrors = () => {
   // E.g., show a toast or alert if there are validation errors
 };
 
-const otpDigits = ref(Array(6).fill("")); // 存储6位OTP
+const otpDigits = formStore.otpDigits; // 从 store 获取 OTP
 
 const onInput = async (index) => {
-  console.log(`Input at index ${index}:`, otpDigits.value[index]);
-
-  if (
-    otpDigits.value[index].length === 1 &&
-    index < otpDigits.value.length - 1
-  ) {
-    console.log(`Attempting to move focus from index ${index} to ${index + 1}`);
+  if (otpDigits[index].length === 1 && index < otpDigits.length - 1) {
     await nextTick();
     const nextInput =
       document.querySelectorAll('input[type="text"]')[index + 1];
-    console.log("Next input element:", nextInput);
     if (nextInput) {
       nextInput.focus();
-      console.log(`Focus moved to input at index ${index + 1}`);
     }
   }
 
-  if (otpDigits.value[index] === "" && index > 0) {
-    console.log(`Attempting to move focus from index ${index} to ${index - 1}`);
+  if (otpDigits[index] === "" && index > 0) {
     await nextTick();
     const prevInput =
       document.querySelectorAll('input[type="text"]')[index - 1];
-    console.log("Previous input element:", prevInput);
     if (prevInput) {
       prevInput.focus();
-      console.log(`Focus moved to input at index ${index - 1}`);
     }
   }
 };
