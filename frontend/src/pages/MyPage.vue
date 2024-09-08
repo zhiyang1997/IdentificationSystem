@@ -171,23 +171,10 @@
                 </div>
 
                 <!-- 彈出視窗 -->
+                <!-- 使用 PrivacyPolicyDialog 組件 -->
+
                 <q-dialog v-model="isPrivacyPolicyDialogOpen" persistent>
-                  <q-card>
-                    <q-card-section>
-                      <div class="text-h6">隱私權政策</div>
-                    </q-card-section>
-                    <q-card-section class="q-pt-none">
-                      <p>這裡放隱私權政策的內容...</p>
-                    </q-card-section>
-                    <q-card-actions align="right">
-                      <q-btn
-                        flat
-                        label="關閉"
-                        color="primary"
-                        @click="isPrivacyPolicyDialogOpen = false"
-                      />
-                    </q-card-actions>
-                  </q-card>
+                  <PrivacyPolicyDialog @readed="closePrivacyPolicyDialog" />
                 </q-dialog>
                 <q-dialog v-model="isTermsDialogOpen" persistent>
                   <q-card>
@@ -288,6 +275,7 @@ import { ref, watch, nextTick } from "vue";
 import { useFormStore } from "../stores/formStore";
 import axios from "axios";
 import { computed } from "vue";
+import PrivacyPolicyDialog from "./PrivacyPolicyDialog.vue"; // 引入對話框組件
 // 使用 Pinia store
 const formStore = useFormStore();
 
@@ -299,6 +287,10 @@ const isTermsDialogOpen = ref(false);
 
 const showPrivacyPolicyDialog = () => {
   isPrivacyPolicyDialogOpen.value = true;
+};
+
+const closePrivacyPolicyDialog = () => {
+  isPrivacyPolicyDialogOpen.value = false;
 };
 
 const showTermsDialog = () => {
