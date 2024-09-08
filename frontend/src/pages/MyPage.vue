@@ -33,6 +33,7 @@
                       color="blue-12"
                       v-model="formData.storeName"
                       label="Shop/Web"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -47,6 +48,7 @@
                       color="blue-12"
                       v-model="formData.productName1"
                       label="Product"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -64,6 +66,7 @@
                       v-model="formData.productPrice"
                       :rules="[(value) => !!value || '產品金額為必填欄位']"
                       label="Cash"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -80,6 +83,7 @@
                       filled
                       :rules="[(value) => !!value || '分期期數為必填欄位']"
                       :disable="!formData.productPrice"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -93,6 +97,7 @@
                       v-model="formData.installmentAmount"
                       type="number"
                       readonly
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -111,6 +116,7 @@
                       type="tel"
                       :rules="[(value) => !!value || '手機門號為必填欄位']"
                       label="PhoneNumber"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -126,6 +132,7 @@
                       v-model="formData.email"
                       type="email"
                       label="E-mail"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
@@ -141,6 +148,7 @@
                       :options="availableTimeOptions"
                       filled
                       :rules="[(value) => !!value || '可接聽時間為必填欄位']"
+                      style="min-height: 80px"
                     />
                   </div>
                 </div>
