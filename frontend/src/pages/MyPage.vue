@@ -17,7 +17,7 @@
           <!-- 步驟 1: 申請資料 -->
           <q-step name="step1" title="申請資料">
             <div class="">
-              <div style="text-align: center">
+              <div class="text-center">
                 <h6>申請資料</h6>
               </div>
               <q-form @submit.prevent="nextStep" @validation-error="showErrors">
@@ -172,32 +172,14 @@
 
                 <!-- 彈出視窗 -->
                 <!-- 使用 PrivacyPolicyDialog 組件 -->
-
                 <q-dialog v-model="isPrivacyPolicyDialogOpen" persistent>
                   <PrivacyPolicyDialog @readed="closePrivacyPolicyDialog" />
                 </q-dialog>
                 <q-dialog v-model="isTermsDialogOpen" persistent>
-                  <q-card>
-                    <q-card-section>
-                      <div class="text-h6">
-                        行動身分識別服務使用者約定條款及隱私權告知條款
-                      </div>
-                    </q-card-section>
-                    <q-card-section class="q-pt-none">
-                      <p>這裡放條款的內容...</p>
-                    </q-card-section>
-                    <q-card-actions align="right">
-                      <q-btn
-                        flat
-                        label="關閉"
-                        color="primary"
-                        @click="isTermsDialogOpen = false"
-                      />
-                    </q-card-actions>
-                  </q-card>
+                  <TermsDialog @readed="closeTermsDialog" />
                 </q-dialog>
 
-                <div class="flex justify-center q-mt-md">
+                <div class="text-center q-mt-lg">
                   <q-btn type="submit" label="下一步" color="primary" />
                 </div>
               </q-form>
@@ -207,7 +189,7 @@
           <!-- 步驟 2: OTP 認證 -->
           <q-step name="step2" title="OTP認證">
             <div class="">
-              <div style="text-align: center">
+              <div class="text-center">
                 <h6>OTP 認證</h6>
               </div>
               <q-form @submit.prevent="nextStep">
@@ -228,7 +210,7 @@
                     input-style="font-weight: bold; color: gray; font-size: 24px;"
                   />
                 </div>
-                <div class="flex justify-center q-mt-md">
+                <div class="text-center q-mt-lg">
                   <q-btn @click="prevStep" label="Back" color="secondary" />
                   <q-btn type="submit" label="Next" color="primary" />
                 </div>
@@ -239,12 +221,12 @@
           <!-- 步驟 3: 證件照片 -->
           <q-step name="step3" title="證件照片">
             <div class="">
-              <div style="text-align: center">
+              <div class="text-center">
                 <h6>證件照片</h6>
               </div>
               <q-form @submit.prevent="nextStep">
                 <q-file filled v-model="formData.photo" label="上傳證件照片" />
-                <div class="flex justify-center q-mt-md">
+                <div class="text-center q-mt-lg">
                   <q-btn @click="prevStep" label="Back" color="secondary" />
                   <q-btn type="submit" label="Next" color="primary" />
                 </div>
@@ -255,11 +237,11 @@
           <!-- 步驟 4: 開始審核 -->
           <q-step name="step4" title="開始審核">
             <div class="">
-              <div style="text-align: center">
+              <div class="text-center">
                 <h6>開始審核</h6>
               </div>
               <p>您的申請正在審核中。</p>
-              <div class="flex justify-center q-mt-md">
+              <div class="text-center q-mt-lg">
                 <q-btn @click="prevStep" label="Back" color="secondary" />
               </div>
             </div>
@@ -276,10 +258,12 @@ import { useFormStore } from "../stores/formStore";
 import axios from "axios";
 import { computed } from "vue";
 import PrivacyPolicyDialog from "./PrivacyPolicyDialog.vue"; // 引入對話框組件
+import TermsDialog from "./TermsDialog.vue";
+
 // 使用 Pinia store
 const formStore = useFormStore();
 
-const step = ref("step1"); // 初始步驟
+const step = ref("step4"); // 初始步驟
 const val = ref(false); // 勾選框
 
 const isPrivacyPolicyDialogOpen = ref(false);
@@ -295,6 +279,10 @@ const closePrivacyPolicyDialog = () => {
 
 const showTermsDialog = () => {
   isTermsDialogOpen.value = true;
+};
+
+const closeTermsDialog = () => {
+  isTermsDialogOpen.value = false;
 };
 
 // 使用 formStore 的数据
