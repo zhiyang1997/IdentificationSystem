@@ -14,75 +14,104 @@
       <q-page class="q-pa-md">
         <!-- 步驟條 -->
         <q-stepper v-model="step" animated>
-          <!-- 步驟 1: 申請資料 -->
-          <q-step name="step1" title="申請資料">
+          <!-- 步驟 1: 基本資料 -->
+          <q-step name="step1" title="基本資料">
             <div class="">
               <div class="text-center">
-                <h6>申請資料</h6>
+                <h6>基本資料</h6>
               </div>
               <q-form @submit.prevent="nextStep" @validation-error="showErrors">
-                <!-- 商店/網站名稱 -->
-                <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">
-                    商店/網站名稱
+                <!-- 姓名 -->
+                <div class="q-form-row q-mb-md">
+                  <label class="block q-mb-md">姓名<span class="required">*</span></label>
+                  <q-input
+                    dense
+                    filled
+                    v-model="step1Data.NAME"
+                    placeholder="請填入真實姓名"
+                    style="width: 80%;"
+                  />
                   </div>
-                  <div class="col-6">
-                    <q-input
-                      clearable
-                      filled
-                      color="blue-12"
-                      v-model="formData.storeName"
-                      label="Shop/Web"
-                      style="min-height: 80px"
-                    />
-                  </div>
+
+                <!-- 手機門號 -->
+                <div class="q-form-row q-mb-md">
+                  <label class="block q-mb-md">手機門號<span class="required">*</span></label>
+                  <q-input
+                    dense
+                    filled
+                    v-model="step1Data.PHONE_NUMBER"
+                    type="tel"
+                    placeholder="填入格式：012345678(共十碼)"
+                    style="width: 80%;"
+                    maxlength="10"
+                    @input="limitLength"
+                    @keypress="onlyNumber($event)"
+                  />
                 </div>
 
-                <!-- 產品名稱 -->
-                <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">產品名稱</div>
-                  <div class="col-6">
-                    <q-input
-                      clearable
-                      filled
-                      color="blue-12"
-                      v-model="formData.productName1"
-                      label="Product"
-                      style="min-height: 80px"
-                    />
-                  </div>
+                <!-- 身分證字號 -->
+                <div class="q-form-row q-mb-md">
+                  <label class="block q-mb-md">身分證字號<span class="required">*</span></label>
+                  <q-input
+                    dense
+                    filled
+                    v-model="step1Data.NATIONAL_ID"
+                    placeholder="請輸入有效之身分證字號"
+                    style="width: 80%; height:1%;"
+                    maxlength="10"
+                    :style="inputStyle"
+                  />
                 </div>
 
-                <!-- 產品金額 -->
-                <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">
-                    產品金額<span class="required">*</span>
-                  </div>
-                  <div class="col-6">
-                    <q-input
-                      clearable
-                      filled
-                      color="blue-12"
-                      v-model="formData.productPrice"
-                      :rules="[(value) => !!value || '產品金額為必填欄位']"
-                      label="Cash"
-                      style="min-height: 80px"
+                <!-- 出生日期 -->
+                <div class="q-form-row q-mb-md">
+                  <label class="block q-mb-md">出生日期<span class="required">*</span><q-icon name="event" class="cursor-pointer" @click="showCalendar = true" /></label>
+                  <q-input
+                    dense
+                    filled
+                    v-model="step1Data.BIRTHDATE"
+                    placeholder="請從小月曆選擇出生日期"
+                    style="width: 80%;"
+                  />
+                  <!-- 小月曆彈窗 -->
+                  <q-popup-proxy
+                    v-model="showCalendar"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                  <q-date
+                    v-model="step1Data.BIRTHDATE"
+                    mask="YYYY-MM-DD"
+                    @input="showCalendar = false"
                     />
-                  </div>
+                  </q-popup-proxy>
+
+                </div>
+
+                <!-- 戶籍地址 -->
+                <div class="q-form-row q-mb-md">
+                  <label class="block q-mb-md">戶籍地址<span class="required">*</span></label>
+                  <q-input
+                    dense
+                    filled
+                    v-model="step1Data.REGISTERED_ADDRESS"
+                    placeholder="請輸入戶籍地址"
+                    style="width: 80%;"
+                  />
                 </div>
 
                 <!-- 分期期數 -->
                 <div class="row items-center q-mb-md">
-                  <div class="col-3 text-right q-pa-xs q-pr-md">
+                  <div class="col-3 q-pa-xs q-pr-md">
                     分期期數<span class="required">*</span>
                   </div>
                   <div class="col-6">
                     <q-select
-                      v-model="formData.installmentPeriod"
+                      v-model="step1Data.installmentPeriod"
                       :options="installmentOptions"
                       filled
                       :rules="[(value) => !!value || '分期期數為必填欄位']"
-                      :disable="!formData.productPrice"
+                      :disable="!step1Data.productPrice"
                       style="min-height: 80px"
                     />
                   </div>
@@ -94,7 +123,7 @@
                   <div class="col-6">
                     <q-input
                       filled
-                      v-model="formData.installmentAmount"
+                      v-model="step1Data.installmentAmount"
                       type="number"
                       readonly
                       style="min-height: 80px"
@@ -112,7 +141,7 @@
                       clearable
                       filled
                       color="blue-12"
-                      v-model="formData.phoneNumber"
+                      v-model="step1Data.phoneNumber"
                       type="tel"
                       :rules="[(value) => !!value || '手機門號為必填欄位']"
                       label="PhoneNumber"
@@ -129,7 +158,7 @@
                       clearable
                       filled
                       color="blue-12"
-                      v-model="formData.email"
+                      v-model="step1Data.email"
                       type="email"
                       label="E-mail"
                       style="min-height: 80px"
@@ -144,8 +173,8 @@
                   </div>
                   <div class="col-6">
                     <q-select
-                      v-model="formData.availableTime"
-                      :options="availableTimeOptions"
+                      v-model="step1Data.availableTime"
+                      :options="timeOptions"
                       filled
                       :rules="[(value) => !!value || '可接聽時間為必填欄位']"
                       style="min-height: 80px"
@@ -225,7 +254,7 @@
                 <h6>證件照片</h6>
               </div>
               <q-form @submit.prevent="nextStep">
-                <q-file filled v-model="formData.photo" label="上傳證件照片" />
+                <q-file filled v-model="step1Data.photo" label="上傳證件照片" />
                 <div class="text-center q-mt-lg">
                   <q-btn @click="prevStep" label="Back" color="secondary" />
                   <q-btn type="submit" label="Next" color="primary" />
@@ -253,17 +282,16 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from "vue";
-import { useFormStore } from "../stores/formStore";
 import axios from "axios";
-import { computed } from "vue";
+import { computed, nextTick, reactive, ref, watch } from "vue";
+import { useFormStore } from "../stores/formStore";
 import PrivacyPolicyDialog from "./PrivacyPolicyDialog.vue"; // 引入對話框組件
 import TermsDialog from "./TermsDialog.vue";
 
 // 使用 Pinia store
 const formStore = useFormStore();
 
-const step = ref("step4"); // 初始步驟
+const step = ref("step1"); // 初始步驟
 const val = ref(false); // 勾選框
 
 const isPrivacyPolicyDialogOpen = ref(false);
@@ -285,8 +313,50 @@ const closeTermsDialog = () => {
   isTermsDialogOpen.value = false;
 };
 
-// 使用 formStore 的数据
-const formData = computed(() => formStore.formData);
+// 使用 步驟一 的資料
+const step1Data = computed(() => formStore.step1Data);
+
+
+/**
+ * 步驟一 手機號碼 十碼
+ */
+const onlyNumber = (event) => {
+  const keyCode = event.keyCode || event.which;
+  const keyValue = String.fromCharCode(keyCode);
+
+  // 如果不是數字，取消輸入
+  if (!/^\d+$/.test(keyValue)) {
+    event.preventDefault();
+  }
+};
+const limitLength = () => {
+  const maxLength = 10;
+  if (step1Data.value.PHONE_NUMBER.length > maxLength) {
+    step1Data.value.PHONE_NUMBER = step1Data.value.PHONE_NUMBER.slice(0, maxLength);
+  }
+};
+
+/**
+ * 步驟一 身份證字號驗證
+ */
+
+const isNationalIDValid = (id) => {
+  if (!id) return true; // 如果是空值，視為有效（不提示）
+  return /^[A-Z][12]/.test(id); // 第一碼是字母，第二碼是 1 或 2
+};
+
+// 動態樣式綁定
+const inputStyle = reactive({
+  border: "",
+});
+
+// 使用 watch 動態監聽
+watch(
+  () => step1Data.value.NATIONAL_ID,
+  (newValue) => {
+    inputStyle.border = isNationalIDValid(newValue) ? "" : "2px solid red";
+  }
+);
 
 const installmentOptions = [
   { label: "請選擇期數", value: null },
@@ -296,32 +366,32 @@ const installmentOptions = [
   { label: "12期", value: 12 },
 ];
 
-const availableTimeOptions = [
+const timeOptions = [
   { label: "上午", value: "AM" },
   { label: "下午", value: "PM" },
   { label: "晚上", value: "Evening" },
 ];
 
 watch(
-  () => formStore.formData.productPrice,
+  () => formStore.step1Data.productPrice,
   (newPrice) => {
     if (!newPrice) {
-      formStore.formData.installmentPeriod = null;
+      formStore.step1Data.installmentPeriod = null;
     }
   }
 );
 
 watch(
-  () => [formStore.formData.productPrice, formStore.formData.installmentPeriod],
+  () => [formStore.step1Data.productPrice, formStore.step1Data.installmentPeriod],
   ([newPrice, newPeriod]) => {
     const price = parseFloat(newPrice);
     const period = parseInt(newPeriod?.value, 10);
 
     if (!isNaN(price) && !isNaN(period) && period > 0) {
       const rawAmount = (price * 1.04) / period;
-      formStore.formData.installmentAmount = Math.round(rawAmount);
+      formStore.step1Data.installmentAmount = Math.round(rawAmount);
     } else {
-      formStore.formData.installmentAmount = ""; // 清空显示的值
+      formStore.step1Data.installmentAmount = ""; // 清空显示的值
     }
   }
 );
@@ -351,7 +421,7 @@ const nextStep = async () => {
   if (currentIndex === 0) {
     // 假设在第一个步骤时发送 OTP
     try {
-      await sendOtpRequest(formData.value.phoneNumber);
+      await sendOtpRequest(step1Data.value.phoneNumber);
       console.log("OTP 已成功发送");
     } catch (error) {
       // 处理发送失败的情况，比如显示错误消息
@@ -438,5 +508,9 @@ const onInput = async (index) => {
 
 .q-input .q-field__control {
   text-align: center; /* 将字符置中 */
+}
+
+.invalid-input {
+  border: 1px solid red !important; /* 將輸入框邊框設置為紅色 */
 }
 </style>
