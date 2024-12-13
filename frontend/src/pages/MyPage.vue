@@ -241,6 +241,10 @@
                   >本人同意以使用本系統產制之電子文件作為分期付款申請及交易之基礎，以電子簽章取代傳統之書面文件及簽名、蓋章確定之相關法律責任。
                 </span>
               </div>
+              <span
+                ><span class="required">*</span
+                >當您點選<span class="required">【繼續】</span>按鈕後，系統會發送一份簡訊密碼至您的手機門號，請確認門號可正常接收簡訊。
+              </span>
               <!-- 彈出視窗 -->
               <!-- 使用 PrivacyPolicyDialog 組件 -->
               <q-dialog v-model="isPrivacyPolicyDialogOpen" persistent>
@@ -333,7 +337,7 @@ import TermsDialog from "./TermsDialog.vue";
 // 使用 Pinia store
 const formStore = useFormStore();
 
-const step = ref("step2"); // 初始步驟
+const step = ref("step1"); // 初始步驟
 const val1 = ref(false); // 勾選框1
 const val2 = ref(false); // 勾選框2
 
@@ -413,10 +417,10 @@ const onInput = (index) => {
   if (!currentValue) {
     // 如果是 Backspace 且當前輸入框為空，跳回到上一個輸入框
     if (index > 0) {
-        const prevInput = otpInputs.value[index - 1];
-        if (prevInput) {
-          prevInput.$el.querySelector("input").focus();
-        }
+      const prevInput = otpInputs.value[index - 1];
+      if (prevInput) {
+        prevInput.$el.querySelector("input").focus();
+      }
     }
   } else if (currentValue) {
     // 如果當前輸入框有值且長度為 1，跳到下一個輸入框
