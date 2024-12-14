@@ -33,13 +33,13 @@
         dense
         filled
         v-model="step3Data.PRODUCT_PRICE"
-        placeholder="請輸入產品金額"
+        placeholder="產品金額 $5,000 ~ $1,000,000 (輸入數字即可)"
         type="number"
         style="width: 100%"
         @update:model-value="validateProductPrice"
         @blur="finalizeProductPrice"
       />
-      <div class="helper-text">產品金額 $5,000 ~ $1,000,000 (輸入數字即可)</div>
+      <!-- <div class="helper-text">產品金額 $5,000 ~ $1,000,000 (輸入數字即可)</div> -->
     </div>
 
     <!-- 分期期數 -->
@@ -65,6 +65,7 @@
         v-model="step3Data.INSTALLMENT_AMOUNT"
         readonly
         style="width: 100%; background-color: #f5f5f5"
+        placeholder="期付金額"
       />
     </div>
 
@@ -137,13 +138,6 @@ const validateProductPrice = () => {
     step3Data.value.PRODUCT_PRICE = MIN_PRICE; // 小於最小值時，自動調整到最小值
   } else if (step3Data.value.PRODUCT_PRICE > MAX_PRICE) {
     step3Data.value.PRODUCT_PRICE = MAX_PRICE; // 大於最大值時，自動調整到最大值
-  }
-};
-
-// 使用者輸入完成後進一步確保合法
-const finalizeProductPrice = () => {
-  if (!step3Data.value.PRODUCT_PRICE) {
-    step3Data.value.PRODUCT_PRICE = MIN_PRICE; // 如果用戶留空，填入最小值
   }
 };
 
