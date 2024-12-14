@@ -7,10 +7,10 @@
         <span v-else>點此簽名</span>
       </div>
       <div class="signature-actions">
-        <span
-          >同意 <a href="#" class="link-green">契約內容</a> 所列事項
-          <span class="required">請簽名</span></span
-        >
+        <span>
+          同意 <a href="#" class="link-green">契約內容</a> 所列事項
+          <span class="required">請簽名</span>
+        </span>
         <q-btn flat label="清除重簽" color="negative" @click="clearSignature" />
       </div>
     </div>
@@ -18,8 +18,26 @@
     <!-- 文件上傳區 -->
     <q-form @submit.prevent="nextStep">
       <div class="file-grid">
-        <div v-for="file in fileItems" :key="file.label" class="file-item">
-          <q-file v-model="file.model" filled :label="file.label" />
+        <div
+          v-for="file in fileItems"
+          :key="file.label"
+          class="file-item"
+          @dragover.prevent
+          @drop="onDrop($event, file)"
+        >
+          <div class="upload-box">
+            <img v-if="file.preview" :src="file.preview" alt="預覽圖片" />
+            <div v-else class="placeholder">
+              <q-icon name="photo_camera" size="48px" color="grey-7" />
+              <span>{{ file.label }}</span>
+            </div>
+            <input
+              type="file"
+              class="file-input"
+              accept="image/*"
+              @change="onFileChange($event, file)"
+            />
+          </div>
           <p class="file-label">
             {{ file.description }}
             <span v-if="file.required" class="required">(必填)</span>
@@ -84,36 +102,42 @@ const fileItems = [
     label: "點此拍照上傳",
     description: "身分證正面",
     model: step4Data.value.frontId,
+    preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "身分證反面",
     model: step4Data.value.backId,
+    preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "健保卡",
     model: step4Data.value.healthCard,
+    preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "手持身分證自拍",
     model: step4Data.value.selfie,
+    preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "財力證明",
     model: step4Data.value.financialProof,
+    preview: null,
     required: false,
   },
   {
     label: "點此拍照上傳",
     description: "其他身分證明 (軍/公/教/學生證)",
     model: step4Data.value.otherProof,
+    preview: null,
     required: false,
   },
 ];
@@ -144,6 +168,29 @@ const clearSignature = () => {
   const signaturePadInstance = signaturePad.value;
   if (signaturePadInstance) signaturePadInstance.clear();
   signatureImage.value = null;
+};
+
+const onDrop = (event, fileItem) => {
+  event.preventDefault();
+  const files = event.dataTransfer.files;
+  if (files.length > 0) {
+    setPreview(files[0], fileItem);
+  }
+};
+
+const onFileChange = (event, fileItem) => {
+  const file = event.target.files[0];
+  if (file) {
+    setPreview(file, fileItem);
+  }
+};
+
+const setPreview = (file, fileItem) => {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    fileItem.preview = e.target.result;
+  };
+  reader.readAsDataURL(file);
 };
 
 const nextStep = () => {
@@ -212,7 +259,54 @@ const prevStep = () => {
 }
 
 .file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
+  padding: 10px;
+}
+
+.upload-box {
+  width: 100%;
+  height: 140px;
+  background-color: #eaeaea;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.upload-box img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #555;
+}
+
+.placeholder q-icon {
+  margin-bottom: 10px;
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .file-label {
@@ -221,14 +315,20 @@ const prevStep = () => {
   color: #333;
 }
 
+/* 必填標籤樣式 */
+.required {
+  color: red;
+  margin-left: 5px;
+}
+
 /* 操作按鈕 */
 .button-group {
   display: flex;
-  justify-content: space-between; /* 按鈕之間間隔 */
+  justify-content: space-between;
   margin-top: 20px;
 }
 
 .action-button {
-  width: 120px; /* 確保按鈕大小一致 */
+  width: 120px;
 }
 </style>
