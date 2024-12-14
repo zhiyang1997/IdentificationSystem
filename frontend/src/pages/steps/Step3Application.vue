@@ -6,7 +6,7 @@
       <q-input
         dense
         filled
-        v-model="step3Data.storeName"
+        v-model="step3Data.STORE_NAME"
         readonly
         style="width: 100%; background-color: #f5f5f5"
       />
@@ -18,7 +18,7 @@
       <q-input
         dense
         filled
-        v-model="step3Data.productName"
+        v-model="step3Data.PRODUCT_NAME"
         readonly
         style="width: 100%; background-color: #f5f5f5"
       />
@@ -32,10 +32,12 @@
       <q-input
         dense
         filled
-        v-model="step3Data.productPrice"
+        v-model="step3Data.PRODUCT_PRICE"
         placeholder="請輸入產品金額"
         type="number"
         style="width: 100%"
+        @update:model-value="validateProductPrice"
+        @blur="finalizeProductPrice"
       />
       <div class="helper-text">產品金額 $5,000 ~ $1,000,000 (輸入數字即可)</div>
     </div>
@@ -48,7 +50,7 @@
       <q-select
         dense
         filled
-        v-model="step3Data.installmentPeriod"
+        v-model="step3Data.INSTALLMENT_MONTHS"
         :options="[3, 6, 12, 24]"
         style="width: 100%"
       />
@@ -60,7 +62,7 @@
       <q-input
         dense
         filled
-        v-model="step3Data.installmentAmount"
+        v-model="step3Data.INSTALLMENT_AMOUNT"
         readonly
         style="width: 100%; background-color: #f5f5f5"
       />
@@ -72,7 +74,7 @@
       <q-input
         dense
         filled
-        v-model="step3Data.email"
+        v-model="step3Data.EMAIL"
         type="email"
         placeholder="請輸入有效的電子信箱"
         style="width: 100%"
@@ -84,28 +86,28 @@
       <label class="block q-mb-md"
         >可接聽電話時間<span class="required">*</span></label
       >
-      <q-btn-group push>
+      <q-btn-group push class="time-button-group">
         <q-btn
           v-for="time in phoneTimes"
           :key="time"
           :label="time"
           flat
           @click="selectPhoneTime(time)"
-          :color="step3Data.phoneTime === time ? 'primary' : 'grey-5'"
+          :color="step3Data.AVAILABLE_TIME === time ? 'primary' : 'grey-5'"
           class="time-button"
         />
       </q-btn-group>
     </div>
 
     <!-- 按鈕區 -->
-    <div class="button-group q-mt-md">
+    <div class="button-group">
       <q-btn
         @click="prevStep"
         label="返回"
         color="grey-7"
         class="action-button"
       />
-      <q-btn type="submit" label="繼續" color="primary" class="action-button" />
+      <q-btn type="submit" label="繼續" color="green-6" class="action-button" />
     </div>
   </q-form>
 </template>
@@ -122,7 +124,27 @@ const step3Data = computed(() => formStore.step3Data); // 綁定 Step3 資料
 const phoneTimes = ["10:00-12:00", "12:00-15:00", "15:00-18:00", "18:00-21:00"];
 
 const selectPhoneTime = (time) => {
-  step3Data.value.phoneTime = time;
+  step3Data.value.AVAILABLE_TIME = time;
+};
+
+// 定義最小和最大金額
+const MIN_PRICE = 5000;
+const MAX_PRICE = 1000000;
+
+// 檢查金額是否符合範圍
+const validateProductPrice = () => {
+  if (step3Data.value.PRODUCT_PRICE < MIN_PRICE) {
+    step3Data.value.PRODUCT_PRICE = MIN_PRICE; // 小於最小值時，自動調整到最小值
+  } else if (step3Data.value.PRODUCT_PRICE > MAX_PRICE) {
+    step3Data.value.PRODUCT_PRICE = MAX_PRICE; // 大於最大值時，自動調整到最大值
+  }
+};
+
+// 使用者輸入完成後進一步確保合法
+const finalizeProductPrice = () => {
+  if (!step3Data.value.PRODUCT_PRICE) {
+    step3Data.value.PRODUCT_PRICE = MIN_PRICE; // 如果用戶留空，填入最小值
+  }
 };
 
 // 下一步操作
@@ -149,8 +171,17 @@ const prevStep = () => {
 }
 
 /* 電話時段按鈕樣式 */
+.time-button-group {
+  display: flex;
+  justify-content: center; /* 按钮水平居中 */
+  gap: 5px; /* 按钮间的间距 */
+  margin: 0; /* 去除外部留白 */
+  padding: 0; /* 去除内边距 */
+}
 .time-button {
-  width: 23%; /* 固定寬度，確保按鈕排列整齊 */
+  width: 20%; /* 固定寬度，確保按鈕排列整齊 */
+  flex: 1; /* 使按钮均匀分布，去除额外空隙 */
+  margin: 0; /* 去除按钮之间的外边距 */
 }
 
 /* 操作按鈕樣式 */
@@ -161,5 +192,8 @@ const prevStep = () => {
 
 .action-button {
   width: 120px; /* 統一按鈕寬度 */
+}
+.required {
+  color: red; /* 將*號設為紅色 */
 }
 </style>
