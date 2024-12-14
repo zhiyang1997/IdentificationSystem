@@ -30,7 +30,16 @@
         @keypress="onlyNumber($event)"
         :error="errors.PHONE_NUMBER"
       />
-      <span class="custom-error" v-if="errors.PHONE_NUMBER">請填寫手機門號</span>
+      <span
+        class="custom-error"
+        v-if="errors.PHONE_NUMBER && !step1Data.PHONE_NUMBER"
+        >請填寫手機門號</span
+      >
+      <span
+        class="custom-error"
+        v-if="errors.PHONE_NUMBER && step1Data.PHONE_NUMBER"
+        >手機門號格式有誤，請確認</span
+      >
     </div>
 
     <!-- 身分證字號 -->
@@ -48,7 +57,16 @@
         :style="inputStyle"
         :error="errors.NATIONAL_ID"
       />
-      <span class="custom-error" v-if="errors.PHONE_NUMBER">請填寫身分證字號</span>
+      <span
+        class="custom-error"
+        v-if="errors.NATIONAL_ID && !step1Data.NATIONAL_ID"
+        >請填寫身分證字號</span
+      >
+      <span
+        class="custom-error"
+        v-if="errors.NATIONAL_ID && step1Data.NATIONAL_ID"
+        >身分證字號格式有誤，請確認</span
+      >
     </div>
 
     <!-- 出生日期 -->
@@ -68,7 +86,7 @@
         style="width: 100%"
         :error="errors.BIRTHDATE"
       />
-      <span class="custom-error" v-if="errors.PHONE_NUMBER">請填寫出生日期</span>
+      <span class="custom-error" v-if="errors.BIRTHDATE">請填寫出生日期</span>
       <!-- 小月曆彈窗 -->
       <q-popup-proxy
         v-model="showCalendar"
@@ -96,13 +114,17 @@
         style="width: 100%"
         :error="errors.REGISTERED_ADDRESS"
       />
-      <span class="custom-error" v-if="errors.PHONE_NUMBER">請填寫戶籍地址</span>
+      <span class="custom-error" v-if="errors.REGISTERED_ADDRESS"
+        >請填寫戶籍地址</span
+      >
     </div>
 
     <!-- 親屬1 -->
     <div class="q-form-row q-mb-md flex-row">
       <div class="input-group">
-        <label class="block q-mb-md">親屬姓名1<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >親屬姓名1<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -111,10 +133,14 @@
           style="width: 100%"
           :error="errors.RELATIVE_NAME1"
         />
-        <span class="custom-error" v-if="errors.RELATIVE_NAME1">請填寫親屬姓名</span>
+        <span class="custom-error" v-if="errors.RELATIVE_NAME1"
+          >請填寫親屬姓名</span
+        >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md">親屬電話1<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >親屬電話1<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -123,10 +149,14 @@
           style="width: 100%"
           :error="errors.RELATIVE_PHONE1"
         />
-        <span class="custom-error" v-if="errors.RELATIVE_PHONE1">請填寫親屬電話</span>
+        <span class="custom-error" v-if="errors.RELATIVE_PHONE1"
+          >請填寫親屬電話</span
+        >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md">親屬關係1<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >親屬關係1<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -135,14 +165,18 @@
           style="width: 100%"
           :error="errors.RELATIVE_RELATION1"
         />
-        <span class="custom-error" v-if="errors.RELATIVE_RELATION1">請填寫親屬關係</span>
+        <span class="custom-error" v-if="errors.RELATIVE_RELATION1"
+          >請填寫親屬關係</span
+        >
       </div>
     </div>
 
     <!-- 親屬2 -->
     <div class="q-form-row q-mb-md flex-row">
       <div class="input-group">
-        <label class="block q-mb-md">親屬姓名2<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >親屬姓名2<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -151,10 +185,14 @@
           style="width: 100%"
           :error="errors.RELATIVE_NAME2"
         />
-        <span class="custom-error" v-if="errors.RELATIVE_NAME2">請填寫親屬姓名</span>
+        <span class="custom-error" v-if="errors.RELATIVE_NAME2"
+          >請填寫親屬姓名</span
+        >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md">親屬電話2<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >親屬電話2<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -163,10 +201,14 @@
           style="width: 100%"
           :error="errors.RELATIVE_PHONE2"
         />
-        <span class="custom-error" v-if="errors.RELATIVE_PHONE2">請填寫親屬電話</span>
+        <span class="custom-error" v-if="errors.RELATIVE_PHONE2"
+          >請填寫親屬電話</span
+        >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md">親屬關係2<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >親屬關係2<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -175,14 +217,18 @@
           style="width: 100%"
           :error="errors.RELATIVE_RELATION2"
         />
-        <span class="custom-error" v-if="errors.RELATIVE_RELATION2">請填寫親屬關係</span>
+        <span class="custom-error" v-if="errors.RELATIVE_RELATION2"
+          >請填寫親屬關係</span
+        >
       </div>
     </div>
 
     <!-- 朋友 -->
     <div class="q-form-row q-mb-md flex-row">
       <div class="input-group">
-        <label class="block q-mb-md">朋友姓名<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >朋友姓名<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -191,10 +237,14 @@
           style="width: 100%"
           :error="errors.FRIEND_NAME"
         />
-        <span class="custom-error" v-if="errors.FRIEND_NAME">請填寫朋友姓名</span>
+        <span class="custom-error" v-if="errors.FRIEND_NAME"
+          >請填寫朋友姓名</span
+        >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md">朋友電話<span class="required">*</span></label>
+        <label class="block q-mb-md"
+          >朋友電話<span class="required">*</span></label
+        >
         <q-input
           dense
           filled
@@ -203,13 +253,15 @@
           style="width: 100%"
           :error="errors.FRIEND_PHONE"
         />
-        <span class="custom-error" v-if="errors.FRIEND_PHONE">請填寫朋友電話</span>
+        <span class="custom-error" v-if="errors.FRIEND_PHONE"
+          >請填寫朋友電話</span
+        >
       </div>
     </div>
     <!-- 勾選框 -->
     <div class="checkbox-container q-mt-md">
       <div class="q-pa-xs q-pr-md">
-        <q-checkbox v-model="val1"/>
+        <q-checkbox v-model="val1" />
       </div>
       <span>
         <span class="required">*</span>我已詳細閱讀並充分了解、同意
@@ -314,13 +366,6 @@ const onlyNumber = (event) => {
     event.preventDefault();
   }
 };
-/**
- * 步驟一 身份證字號驗證
- */
-const isNationalIDValid = (id) => {
-  if (!id) return true; // 如果是空值，視為有效（不提示）
-  return /^[A-Z][12]/.test(id); // 第一碼是字母，第二碼是 1 或 2
-};
 
 // 用於追蹤每個欄位的錯誤狀態
 const errors = ref({});
@@ -329,6 +374,8 @@ const errors = ref({});
 const validateForm = () => {
   let isValid = true;
   const missingFields = [];
+  const invalidFields = [];
+
   // 定義欄位標籤對應
   const fieldLabels = {
     NAME: "姓名",
@@ -345,19 +392,45 @@ const validateForm = () => {
     FRIEND_NAME: "朋友姓名",
     FRIEND_PHONE: "朋友電話",
   };
-  // 遍歷所有欄位，檢查是否有值
+
+  // 驗證身分證字號
+  const validNationalID = (id) => /^[A-Z][12]\d{8}$/.test(id);
+
+  // 驗證手機門號
+  const validPhoneNumber = (phone) => /^09\d{8}$/.test(phone);
+
+  // 遍歷所有欄位，檢查是否有值和格式是否正確
   Object.keys(step1Data.value).forEach((key) => {
-    if (!step1Data.value[key]) {
-      errors.value[key] = true; // 設置錯誤狀態
+    const value = step1Data.value[key];
+
+    if (!value) {
+      // 如果欄位為空
+      errors.value[key] = true;
       isValid = false;
-      missingFields.push(fieldLabels[key]); // 收集未填寫的欄位
+      missingFields.push(fieldLabels[key]);
     } else {
-      errors.value[key] = false; // 清除錯誤狀態
+      // 如果欄位有值，進行格式驗證
+      if (key === "NATIONAL_ID" && !validNationalID(value)) {
+        errors.value[key] = true;
+        invalidFields.push(fieldLabels[key]);
+        isValid = false;
+      } else if (key === "PHONE_NUMBER" && !validPhoneNumber(value)) {
+        errors.value[key] = true;
+        invalidFields.push(fieldLabels[key]);
+        isValid = false;
+      } else {
+        errors.value[key] = false; // 清除錯誤狀態
+      }
     }
   });
 
-  if (!isValid) {
+  // 顯示錯誤提示
+  if (missingFields.length > 0) {
     alert(`仍有[${missingFields.join(", ")}]尚未填寫！`);
+  }
+
+  if (invalidFields.length > 0) {
+    alert(`[${invalidFields.join(", ")}]格式錯誤！`);
   }
 
   return isValid;
@@ -437,5 +510,4 @@ const nextStep = async () => {
 ::v-deep(.q-field--with-bottom) {
   padding-bottom: 0;
 }
-
 </style>
