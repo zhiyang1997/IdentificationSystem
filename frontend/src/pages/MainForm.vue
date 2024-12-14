@@ -4,7 +4,7 @@
     <q-header class="custom-header" elevated>
       <q-toolbar>
         <q-space />
-        <h6>基本資料</h6>
+        <h6>{{ currentStepTitle }}</h6>
         <q-space />
       </q-toolbar>
     </q-header>
@@ -46,15 +46,19 @@
 <script setup>
 import { computed } from "vue";
 import { useFormStore } from "../stores/formStore";
-import { defineAsyncComponent } from "vue";
+import Step1Form from "./steps/Step1Form.vue";
+import Step2Otp from "./steps/Step2Otp.vue";
+import Step3Application from "./steps/Step3Application.vue";
+import Step4Photo from "./steps/Step4Photo.vue";
+import Step5Review from "./steps/Step5Review.vue";
 
 // 動態載入步驟元件
 const stepComponents = {
-  step1: defineAsyncComponent(() => import("./steps/Step1Form.vue")),
-  step2: defineAsyncComponent(() => import("./steps/Step2Otp.vue")),
-  step3: defineAsyncComponent(() => import("./steps/Step3Application.vue")),
-  step4: defineAsyncComponent(() => import("./steps/Step4Photo.vue")),
-  step5: defineAsyncComponent(() => import("./steps/Step5Review.vue")),
+  step1: Step1Form,
+  step2: Step2Otp,
+  step3: Step3Application,
+  step4: Step4Photo,
+  step5: Step5Review,
 };
 
 const formStore = useFormStore();
@@ -65,14 +69,26 @@ const currentStep = computed({
   get: () => formStore.currentStep,
   set: (value) => (formStore.currentStep = value),
 });
+
+// 定義步驟標題
+const stepTitles = {
+  step1: "基本資料",
+  step2: "OTP 認證",
+  step3: "申請資料",
+  step4: "證件與簽名",
+  step5: "開始審核",
+};
+
+// 根據當前步驟動態計算標題
+const currentStepTitle = computed(() => stepTitles[formStore.currentStep]);
 </script>
 
 <style scoped>
 .custom-header {
   color: black;
   background-color: #faf4df; /* 背景色為米色 */
-  border-bottom: 3px solid black; /* 藍色底線，寬度為4px */
-  max-width: 800px; /* 設定最大寬度 */
+  border-bottom: 2px solid rgba(0, 0, 0, 1); /* 藍色底線，寬度為4px */
+  max-width: 700px; /* 設定最大寬度 */
   margin: 0 auto; /* 居中显示 */
 }
 
