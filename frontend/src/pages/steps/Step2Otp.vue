@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="text-center">
-      <h6>OTP 認證</h6>
+      <h6>簡訊已發送到<span class="phone-number">{{formStore.step1Data.PHONE_NUMBER}}</span>請盡快輸入驗證碼</h6>
     </div>
     <q-form @submit.prevent="nextStep">
       <!-- OTP输入框 -->
@@ -22,9 +22,20 @@
         />
       </div>
 
-      <div class="text-center q-mt-lg">
-        <q-btn @click="prevStep" label="返回" color="secondary" />
-        <q-btn type="submit" label="繼續" color="primary" />
+      <!-- 按鈕區 -->
+      <div class="button-group">
+        <q-btn
+          @click="prevStep"
+          label="返回"
+          color="grey-7"
+          class="action-button"
+        />
+        <q-btn
+          type="submit"
+          label="繼續"
+          color="green-6"
+          class="action-button"
+        />
       </div>
     </q-form>
   </div>
@@ -33,7 +44,6 @@
 <script setup>
 import { computed, ref, nextTick } from "vue";
 import { useFormStore } from "../../stores/formStore";
-
 // 使用 Pinia store
 const formStore = useFormStore();
 
@@ -118,5 +128,21 @@ const prevStep = () => {
   width: 50px; /* 设置每个输入框的宽度 */
   height: 50px; /* 设置每个输入框的高度 */
   text-align: center;
+}
+
+/* 操作按鈕樣式 */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 100px; /* 與上方 OTP 區域的間隔 */
+}
+
+.action-button {
+  width: 120px; /* 統一按鈕寬度 */
+}
+
+
+.phone-number {
+  color:rgba(32, 121, 255, 1); /* 將電話號碼設為藍色 */
 }
 </style>
