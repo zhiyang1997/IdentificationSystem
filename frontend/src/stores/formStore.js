@@ -23,6 +23,16 @@ export const useFormStore = defineStore("form", {
       otpDigits: Array(6).fill(""), // 存储6位OTP
     },
 
+    step3Data: {
+      storeName: "豐原向陽山", // 商店/網站名稱（寫死）
+      productName: "精品改裝", // 產品名稱（寫死）
+      productPrice: "5000", // 商品金額（寫死，預設為最低金額）
+      installmentPeriod: null, // 分期期數（可選）
+      installmentAmount: "", // 預計期付金額
+      email: "", // Email
+      phoneTime: "", // 可聯繫電話時段
+    },
+
     step4Data: {
       frontId: null, // 身分證正面
       backId: null, // 身分證反面
@@ -43,6 +53,20 @@ export const useFormStore = defineStore("form", {
     // 更新 Step2 OTP 資料
     updateStep2OtpDigit(index, value) {
       this.step2Data.otpDigits[index] = value;
+    },
+
+    // 更新 Step3 資料
+    updateStep3Data(key, value) {
+      if (
+        [
+          "installmentPeriod",
+          "installmentAmount",
+          "email",
+          "phoneTime",
+        ].includes(key)
+      ) {
+        this.step3Data[key] = value;
+      }
     },
 
     // 更新 Step4 資料
@@ -72,6 +96,19 @@ export const useFormStore = defineStore("form", {
     // 清除 Step2 資料
     clearStep2Data() {
       this.step2Data.otpDigits = Array(6).fill("");
+    },
+
+    // 清除 Step3 資料
+    clearStep3Data() {
+      this.step3Data = {
+        storeName: "豐原向陽山", // 預設固定值
+        productName: "精品改裝", // 預設固定值
+        productPrice: "5000", // 預設固定值
+        installmentPeriod: null,
+        installmentAmount: "",
+        email: "",
+        phoneTime: "",
+      };
     },
 
     // 清除 Step4 資料
