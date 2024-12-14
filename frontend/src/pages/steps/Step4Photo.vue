@@ -258,17 +258,8 @@ const onDrop = (event, file) => {
   ctx.drawImage(image, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
 
   // 返回裁剪后的 Base64 数据
-  return canvas.toDataURL("image/jpeg", 0.9); // 0.9 是图片质量
+  return canvas.toDataURL("image/jpeg");
 };
-
-const setPreview = (file, fileItem) => {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    fileItem.preview = e.target.result;
-  };
-  reader.readAsDataURL(file);
-};
-
 const nextStep = () => {
   formStore.currentStep = "step5";
 };
