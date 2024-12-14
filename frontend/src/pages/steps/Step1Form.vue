@@ -218,8 +218,9 @@
       <TermsDialog @readed="closeTermsDialog" />
     </q-dialog>
 
-    <div class="text-center q-mt-lg">
-      <q-btn type="submit" label="繼續" color="primary" />
+    <!-- 操作按鈕 -->
+    <div class="button-group">
+      <q-btn type="submit" label="繼續" color="green-6" class="action-button" />
     </div>
   </q-form>
 </template>
@@ -336,5 +337,16 @@ watch(
   display: flex;
   gap: 16px; /* 控制每個輸入框之間的間距 */
   align-items: flex-start; /* 對齊方式 */
+}
+
+/* 操作按鈕 */
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+}
+.action-button {
+  width: 120px; /* 統一按鈕寬度 */
 }
 </style>
