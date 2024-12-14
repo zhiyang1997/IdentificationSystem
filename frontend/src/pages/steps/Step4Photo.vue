@@ -26,9 +26,11 @@
           @drop="onDrop($event, file)"
         >
           <div class="upload-box">
-            <img v-if="file.preview" :src="file.preview" alt="預覽圖片" />
-            <div v-else class="placeholder">
-              <q-icon name="photo_camera" size="48px" color="grey-7" />
+            <div v-if="file.preview">
+              <img :src="file.preview" alt="預覽圖片" class="preview-image" />
+            </div>
+            <div v-if="!file.preview">
+              <q-icon name="photo_camera" size="50px" color="grey-7" />
               <span>{{ file.label }}</span>
             </div>
             <input
@@ -86,7 +88,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, reactive } from "vue";
 import SignaturePad from "../../components/SignaturePad.vue"; // 簽名板組件
 import { useFormStore } from "../../stores/formStore";
 
@@ -97,50 +99,50 @@ const signatureImage = ref(null); // 儲存簽名圖片
 const signaturePad = ref(null); // 獲取簽名板實例
 
 // 文件上傳項目配置
-const fileItems = [
+const fileItems = reactive([
   {
     label: "點此拍照上傳",
     description: "身分證正面",
-    model: step4Data.value.frontId,
+    model: step4Data.value.ID_CARD_FRONT,
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "身分證反面",
-    model: step4Data.value.backId,
+    model: step4Data.value.ID_CARD_BACK,
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "健保卡",
-    model: step4Data.value.healthCard,
+    model: step4Data.value.HEALTH_INSURANCE_CARD,
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "手持身分證自拍",
-    model: step4Data.value.selfie,
+    model: step4Data.value.SELFIE_WITH_ID_CARD,
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "財力證明",
-    model: step4Data.value.financialProof,
+    model: step4Data.value.FINANCIAL_PROOF,
     preview: null,
     required: false,
   },
   {
     label: "點此拍照上傳",
     description: "其他身分證明 (軍/公/教/學生證)",
-    model: step4Data.value.otherProof,
+    model: step4Data.value.OTHER_DOCUMENT1,
     preview: null,
     required: false,
   },
-];
+]);
 
 // 方法
 const openSignatureDialog = () => {
@@ -170,19 +172,93 @@ const clearSignature = () => {
   signatureImage.value = null;
 };
 
-const onDrop = (event, fileItem) => {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
-  if (files.length > 0) {
-    setPreview(files[0], fileItem);
+const onFileChange = (event, file) => {
+  const selectedFile = event.target.files[0];
+  if (!selectedFile) return;
+
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    const image = new Image();
+    image.src = e.target.result;
+
+    image.onload = () => {
+      // 调用裁剪方法
+      const croppedImage = cropImageToSize(image, 300, 150); // 指定裁剪后的宽高
+      file.preview = croppedImage; // 更新预览
+      console.log("裁剪后的图片数据: ", file.preview);
+    };
+
+    image.onerror = (err) => {
+      console.error("图片加载失败: ", err);
+    };
+  };
+
+  reader.onerror = (err) => {
+    console.error("文件读取失败: ", err);
+  };
+
+  reader.readAsDataURL(selectedFile);
+};
+// 圖片拖曳處理
+const onDrop = (event, file) => {
+  const uploadedFile = event.dataTransfer.files[0];
+  if (uploadedFile) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      file.preview = e.target.result; // 设置图片的 base64 数据
+      console.log("预览图片数据: ", file.preview); // 调试信息
+    };
+    reader.onerror = () => {
+      console.error("文件读取失败");
+    };
+    reader.readAsDataURL(uploadedFile);
+  } else {
+    console.log("未拖拽文件");
   }
 };
 
-const onFileChange = (event, fileItem) => {
-  const file = event.target.files[0];
-  if (file) {
-    setPreview(file, fileItem);
+/**
+ * 裁剪图片到指定宽高
+ * @param {HTMLImageElement} image - 上传的图片对象
+ * @param {number} targetWidth - 目标宽度
+ * @param {number} targetHeight - 目标高度
+ * @returns {string} - 返回裁剪后的 Base64 图片数据
+ */
+ const cropImageToSize = (image, targetWidth, targetHeight) => {
+  // 创建 canvas
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // 设置 canvas 的大小为目标大小
+  canvas.width = targetWidth;
+  canvas.height = targetHeight;
+
+  // 计算裁剪的起点和缩放比例
+  const imageAspectRatio = image.width / image.height;
+  const targetAspectRatio = targetWidth / targetHeight;
+
+  let sx, sy, sWidth, sHeight;
+
+  if (imageAspectRatio > targetAspectRatio) {
+    // 图片过宽时，裁剪宽度
+    sHeight = image.height;
+    sWidth = sHeight * targetAspectRatio;
+    sx = (image.width - sWidth) / 2;
+    sy = 0;
+  } else {
+    // 图片过高时，裁剪高度
+    sWidth = image.width;
+    sHeight = sWidth / targetAspectRatio;
+    sx = 0;
+    sy = (image.height - sHeight) / 2;
   }
+
+  // 绘制裁剪后的图片到 canvas
+  ctx.drawImage(image, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+
+  // 返回裁剪后的 Base64 数据
+  return canvas.toDataURL("image/jpeg", 0.9); // 0.9 是图片质量
 };
 
 const setPreview = (file, fileItem) => {
@@ -281,10 +357,11 @@ const prevStep = () => {
 }
 
 .upload-box img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: 8px;
+  justify-content: center;
 }
 
 .placeholder {
@@ -313,6 +390,12 @@ const prevStep = () => {
   margin-top: 10px;
   font-size: 14px;
   color: #333;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* 必填標籤樣式 */
