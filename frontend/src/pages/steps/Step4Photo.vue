@@ -153,6 +153,7 @@ const closeSignatureDialog = () => {
   isSignatureDialogOpen.value = false;
 };
 
+//簽名
 const saveSignature = () => {
   const signaturePadInstance = signaturePad.value;
   if (signaturePadInstance) {
@@ -166,12 +167,14 @@ const saveSignature = () => {
   }
 };
 
+// 清除簽名
 const clearSignature = () => {
   const signaturePadInstance = signaturePad.value;
   if (signaturePadInstance) signaturePadInstance.clear();
   signatureImage.value = null;
 };
 
+// 圖片預覽
 const onFileChange = (event, file) => {
   const selectedFile = event.target.files[0];
   if (!selectedFile) return;
@@ -183,81 +186,82 @@ const onFileChange = (event, file) => {
     image.src = e.target.result;
 
     image.onload = () => {
-      // 调用裁剪方法
-      const croppedImage = cropImageToSize(image, 300, 150); // 指定裁剪后的宽高
-      file.preview = croppedImage; // 更新预览
-      console.log("裁剪后的图片数据: ", file.preview);
+      // 調用裁剪方法
+      const croppedImage = cropImageToSize(image, 300, 150);
+      file.preview = croppedImage; // 更新預覽
+      console.log("裁剪後的圖片數據: ", file.preview);
     };
 
     image.onerror = (err) => {
-      console.error("图片加载失败: ", err);
+      console.error("圖片加載失敗: ", err);
     };
   };
 
   reader.onerror = (err) => {
-    console.error("文件读取失败: ", err);
+    console.error("圖片讀取失敗: ", err);
   };
 
   reader.readAsDataURL(selectedFile);
 };
+
 // 圖片拖曳處理
 const onDrop = (event, file) => {
   const uploadedFile = event.dataTransfer.files[0];
   if (uploadedFile) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      file.preview = e.target.result; // 设置图片的 base64 数据
-      console.log("预览图片数据: ", file.preview); // 调试信息
+      file.preview = e.target.result; // 設定圖片的 base64 數據
+      console.log("預覽圖片數據: ", file.preview); // 打印看一下
     };
     reader.onerror = () => {
-      console.error("文件读取失败");
+      console.error("圖片讀取失敗");
     };
     reader.readAsDataURL(uploadedFile);
   } else {
-    console.log("未拖拽文件");
+    console.log("未拖曳圖片");
   }
 };
 
 /**
- * 裁剪图片到指定宽高
- * @param {HTMLImageElement} image - 上传的图片对象
- * @param {number} targetWidth - 目标宽度
- * @param {number} targetHeight - 目标高度
- * @returns {string} - 返回裁剪后的 Base64 图片数据
+ * 裁剪圖片到指定寬高
+ * @param {HTMLImageElement} image - 上傳的圖片
+ * @param {number} targetWidth - 目標寬度
+ * @param {number} targetHeight - 目標高度
+ * @returns {string} - 回傳裁剪後的 Base64 圖片數據
  */
  const cropImageToSize = (image, targetWidth, targetHeight) => {
-  // 创建 canvas
+  // 宣告 canvas
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  // 设置 canvas 的大小为目标大小
+  // 設定 canvas 的大小為目標大小
   canvas.width = targetWidth;
   canvas.height = targetHeight;
 
-  // 计算裁剪的起点和缩放比例
+  // 計算裁剪的起點和縮放比例
   const imageAspectRatio = image.width / image.height;
   const targetAspectRatio = targetWidth / targetHeight;
 
   let sx, sy, sWidth, sHeight;
 
   if (imageAspectRatio > targetAspectRatio) {
-    // 图片过宽时，裁剪宽度
+    // 圖片過寬，裁剪寬度
     sHeight = image.height;
     sWidth = sHeight * targetAspectRatio;
     sx = (image.width - sWidth) / 2;
     sy = 0;
   } else {
-    // 图片过高时，裁剪高度
+    // 圖片過高，裁剪高度
     sWidth = image.width;
     sHeight = sWidth / targetAspectRatio;
     sx = 0;
     sy = (image.height - sHeight) / 2;
   }
 
-  // 绘制裁剪后的图片到 canvas
+  // 裁剪後的圖片存到canvas
   ctx.drawImage(image, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
 
-  // 返回裁剪后的 Base64 数据
+  // 回傳裁剪後的 Base64 數據
   return canvas.toDataURL("image/jpeg");
 };
 const nextStep = () => {
