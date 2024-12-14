@@ -26,7 +26,7 @@ export const useFormStore = defineStore("form", {
     step3Data: {
       STORE_NAME: "豐原向陽山", // 商店/網站名稱（寫死）
       PRODUCT_NAME: "精品改裝", // 產品名稱（寫死）
-      PRODUCT_PRICE: "5000", // 商品金額（寫死，預設為最低金額）
+      PRODUCT_PRICE: "", // 商品金額（寫死，預設為最低金額）
       INSTALLMENT_MONTHS: null, // 分期期數（可選）
       INSTALLMENT_AMOUNT: "", // 預計期付金額
       EMAIL: "", // Email
@@ -103,7 +103,7 @@ export const useFormStore = defineStore("form", {
       this.step3Data = {
         STORE_NAME: "豐原向陽山", // 商店/網站名稱（寫死）
         PRODUCT_NAME: "精品改裝", // 產品名稱（寫死）
-        PRODUCT_PRICE: "5000", // 商品金額（寫死，預設為最低金額）
+        PRODUCT_PRICE: "", // 商品金額（寫死，預設為最低金額）
         INSTALLMENT_MONTHS: null, // 分期期數（可選）
         INSTALLMENT_AMOUNT: "", // 預計期付金額
         EMAIL: "", // Email
