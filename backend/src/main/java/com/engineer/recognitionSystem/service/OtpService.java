@@ -10,9 +10,9 @@ import java.security.SecureRandom;
 @Service
 public class OtpService {
 
-    // Twilio Account SID 和 Auth Token 
-    private final String ACCOUNT_SID = "AC90e8861c32f4cd69396f18915cbca106";
-    private final String AUTH_TOKEN = "23163ed6b352f8ace7a4c2850e062d83";
+    // Twilio Account SID 和 Auth Token
+    public static final String ACCOUNT_SID = "AC90e8861c32f4cd69396f18915cbca106";
+    public static final String AUTH_TOKEN = "7e06b682a4a9a4974693f655719e5931";
     private final String FROM_PHONE_NUMBER = "+14439918839";
 
     public OtpService() {
@@ -36,6 +36,6 @@ public class OtpService {
         Message.creator(
                 new PhoneNumber(toPhoneNumber),
                 new PhoneNumber(FROM_PHONE_NUMBER),
-                "[此為測試簡訊]你的 OTP code 為，請於15分鐘內輸入: " + otp).create();
+                "你的 OTP驗證碼為，請於1分鐘內輸入: " + otp).create();
     }
 }
