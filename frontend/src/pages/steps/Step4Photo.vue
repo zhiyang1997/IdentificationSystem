@@ -146,6 +146,7 @@ const fileItems = reactive([
 
 // 方法
 const openSignatureDialog = () => {
+
   isSignatureDialogOpen.value = true;
 };
 
@@ -162,6 +163,7 @@ const saveSignature = () => {
       alert("請先簽名！");
     } else {
       signatureImage.value = signature;
+      step4Data.value.SIGN_DATA = signatureImage.value;
       closeSignatureDialog();
     }
   }

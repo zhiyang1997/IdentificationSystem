@@ -73,10 +73,7 @@
     <div class="q-form-row q-mb-md">
       <label class="block q-mb-md"
         >出生日期<span class="required">*</span
-        ><q-icon
-          name="event"
-          class="cursor-pointer"
-          @click="showCalendar = true"
+        ><q-icon name="event" class="cursor-pointer" @click="showCalendar"
       /></label>
       <q-input
         dense
@@ -89,14 +86,14 @@
       <span class="custom-error" v-if="errors.BIRTHDATE">請填寫出生日期</span>
       <!-- 小月曆彈窗 -->
       <q-popup-proxy
-        v-model="showCalendar"
+        v-model="calendar"
         transition-show="scale"
         transition-hide="scale"
       >
         <q-date
           v-model="step1Data.BIRTHDATE"
           mask="YYYY-MM-DD"
-          @input="showCalendar = false"
+          @click="showCalendar"
         />
       </q-popup-proxy>
     </div>
@@ -303,6 +300,7 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { ref, computed } from "vue";
 import { useFormStore } from "../../stores/formStore";
 import PrivacyPolicyDialog from "../PrivacyPolicyDialog.vue";
@@ -333,7 +331,11 @@ const closeTermsDialog = () => {
   isTermsDialogOpen.value = false;
 };
 
-const showCalendar = ref(false); // 控制小月曆彈窗
+const calendar = ref(false); // 控制小月曆彈窗
+
+const showCalendar = () => {
+  calendar.value = !calendar.value;
+};
 
 // 使用 步驟一 的資料
 const step1Data = computed(() => formStore.step1Data);
@@ -442,6 +444,7 @@ const nextStep = async () => {
     try {
       if (validateForm()) {
         if (val1.value && val2.value) {
+          await sendOtpRequest(step1Data.value);
           formStore.currentStep = "step2";
         } else {
           alert(
@@ -450,13 +453,34 @@ const nextStep = async () => {
         }
         // 進入下一步邏輯
       }
-      // await sendOtpRequest(step1Data.value.phoneNumber);
+
       // console.log("OTP 已成功发送");
     } catch (error) {
       // 处理发送失败的情况，比如显示错误消息
       // console.error("无法发送 OTP");
       return; // 阻止进入下一步
     }
+  }
+};
+
+const sendOtpRequest = async (step1Data) => {
+  try {
+    const requestData = {
+      Step1ReqDto: { step1Data.value }, // 将 Pinia 中的 Step1 数据映射为后端需要的格式
+    };
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/sendotp",
+      requestData,
+      {
+        headers: {
+          "Content-Type": "application/json", // 设置为 JSON 格式
+        },
+      }
+    );
+    return response.data; // 返回后端的响应数据
+  } catch (error) {
+    console.log("发送 OTP 失败:", error);
+    throw error;
   }
 };
 </script>
