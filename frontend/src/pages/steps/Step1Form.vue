@@ -466,7 +466,7 @@ const nextStep = async () => {
 const sendOtpRequest = async (step1Data) => {
   try {
     const requestData = {
-      Step1ReqDto: { step1Data.value }, // 将 Pinia 中的 Step1 数据映射为后端需要的格式
+      Step1ReqDto: { step1Data }, // 将 Pinia 中的 Step1 数据映射为后端需要的格式
     };
     const response = await axios.post(
       "http://localhost:8080/api/v1/sendotp",
