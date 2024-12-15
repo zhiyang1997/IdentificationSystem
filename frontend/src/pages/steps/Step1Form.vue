@@ -468,10 +468,9 @@ const sendOtpRequest = async (step1Data) => {
     const response = await axios.post("http://localhost:8080/api/v1/sendotp", {
       step1ReqDto: step1Data,
     });
-    return response.data; // 返回后端的响应数据
+    return response.data;
   } catch (error) {
-    console.log("发送 OTP 失败:", error);
-    throw error;
+    console.log("發送 OTP驗證碼 失敗:", error);
   }
 };
 </script>

@@ -29,6 +29,6 @@ public class OtpController {
         String otp = otpService.generateOtp();
         // 发送 OTP 到用户手机
         otpService.sendOtp(phoneNumber, otp);
-        return ResponseEntity.ok("已發送簡訊到您的手機。");
+        return ResponseEntity.ok("已發送簡訊到您的手機，請於1分鐘內輸入。");
     }
 }

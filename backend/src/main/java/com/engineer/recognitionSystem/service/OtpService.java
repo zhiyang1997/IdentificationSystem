@@ -12,7 +12,7 @@ public class OtpService {
 
     // Twilio Account SID 和 Auth Token
     public static final String ACCOUNT_SID = "AC90e8861c32f4cd69396f18915cbca106";
-    public static final String AUTH_TOKEN = "7e06b682a4a9a4974693f655719e5931";
+    public static final String AUTH_TOKEN = "53510363097821af83107e4138f8a461";
     private final String FROM_PHONE_NUMBER = "+14439918839";
 
     public OtpService() {
