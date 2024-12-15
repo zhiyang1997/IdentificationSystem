@@ -465,18 +465,9 @@ const nextStep = async () => {
 
 const sendOtpRequest = async (step1Data) => {
   try {
-    const requestData = {
-      Step1ReqDto: { step1Data }, // 将 Pinia 中的 Step1 数据映射为后端需要的格式
-    };
-    const response = await axios.post(
-      "http://localhost:8080/api/v1/sendotp",
-      requestData,
-      {
-        headers: {
-          "Content-Type": "application/json", // 设置为 JSON 格式
-        },
-      }
-    );
+    const response = await axios.post("http://localhost:8080/api/v1/sendotp", {
+      step1ReqDto: step1Data,
+    });
     return response.data; // 返回后端的响应数据
   } catch (error) {
     console.log("发送 OTP 失败:", error);
