@@ -62,7 +62,7 @@ import { useFormStore } from "../../stores/formStore";
 const formStore = useFormStore();
 
 // 初始化 OTP 資料
-const otpDigits = computed(() => formStore.step2Data.otpDigits);
+const otpDigits = computed(() => formStore.step2Data.OTP_DIGITS);
 const otpInputs = ref([]); //位置
 
 const resendDisabled = ref(true); // 是否禁用重新發送按鈕

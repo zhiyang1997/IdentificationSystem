@@ -20,7 +20,7 @@ export const useFormStore = defineStore("form", {
     },
 
     step2Data: {
-      otpDigits: Array(6).fill(""), // 存放OTP六位數
+      OTP_DIGITS: Array(6).fill(""), // 存放OTP六位數
     },
 
     step3Data: {
