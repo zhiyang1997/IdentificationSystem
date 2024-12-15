@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class FromDataReqDto {
-    
-    public Step1ReqDto Step1ReqDto;
 
-    public Step2ReqDto Step2ReqDto;
+    public Step1ReqDto step1ReqDto;
 
-    public Step3ReqDto Step3ReqDto;
+    public Step2ReqDto step2ReqDto;
 
-    public Step4ReqDto Step4ReqDto;
+    public Step3ReqDto step3ReqDto;
+
+    public Step4ReqDto step4ReqDto;
 }
