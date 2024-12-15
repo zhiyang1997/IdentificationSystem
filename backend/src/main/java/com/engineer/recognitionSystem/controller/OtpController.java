@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.engineer.recognitionSystem.dto.FromDataReqDto;
-import com.engineer.recognitionSystem.dto.Step1ReqDto;
 import com.engineer.recognitionSystem.service.OtpService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,6 +23,7 @@ public class OtpController {
     public ResponseEntity<String> sendOtp(@RequestBody FromDataReqDto reqDto) {
 
         String phoneNumber = reqDto.Step1ReqDto.getPHONE_NUMBER();
+        System.out.println("phoneNumber: " + phoneNumber);
         // 生成 OTP
         String otp = otpService.generateOtp();
         // 发送 OTP 到用户手机
