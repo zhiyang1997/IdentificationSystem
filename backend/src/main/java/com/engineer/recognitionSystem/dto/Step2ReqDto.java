@@ -8,5 +8,5 @@ import lombok.Data;
 public class Step2ReqDto {
 
     @JsonProperty("OTP_DIGITS")
-    private String OTP_DIGITS;
+    private String otpDigits;
 }

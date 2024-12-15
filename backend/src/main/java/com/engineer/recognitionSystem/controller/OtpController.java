@@ -22,7 +22,8 @@ public class OtpController {
     @PostMapping("/sendotp")
     public ResponseEntity<String> sendOtp(@RequestBody FromDataReqDto reqDto) {
 
-        String phoneNumber = reqDto.Step1ReqDto.getPHONE_NUMBER();
+        System.out.println("reqDto: " + reqDto);
+        String phoneNumber = reqDto.getStep1ReqDto().getPhoneNumber();
         System.out.println("phoneNumber: " + phoneNumber);
         // 生成 OTP
         String otp = otpService.generateOtp();

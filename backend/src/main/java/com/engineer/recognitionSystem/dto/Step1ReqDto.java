@@ -6,43 +6,43 @@ import lombok.Data;
 
 @Data
 public class Step1ReqDto {
-    
+
     @JsonProperty("NAME")
-    private String NAME;
+    private String name;
 
     @JsonProperty("PHONE_NUMBER")
-    private String PHONE_NUMBER;
+    private String phoneNumber;
 
     @JsonProperty("NATIONAL_ID")
-    private String NATIONAL_ID;
+    private String nationalId;
 
     @JsonProperty("BIRTHDATE")
-    private String BIRTHDATE;
-    
+    private String birthdate;
+
     @JsonProperty("REGISTERED_ADDRESS")
-    private String REGISTERED_ADDRESS;
-    
+    private String registeredAddress;
+
     @JsonProperty("RELATIVE_NAME1")
-    private String RELATIVE_NAME1;
+    private String relativeName1;
 
     @JsonProperty("RELATIVE_RELATION1")
-    private String RELATIVE_RELATION1;
+    private String relativeRelation1;
 
     @JsonProperty("RELATIVE_PHONE1")
-    private String RELATIVE_PHONE1;
+    private String relativePhone1;
 
     @JsonProperty("RELATIVE_NAME2")
-    private String RELATIVE_NAME2;
+    private String relativeName2;
 
     @JsonProperty("RELATIVE_RELATION2")
-    private String RELATIVE_RELATION2;
+    private String relativeRelation2;
 
     @JsonProperty("RELATIVE_PHONE2")
-    private String RELATIVE_PHONE2;
+    private String relativePhone2;
 
     @JsonProperty("FRIEND_NAME")
-    private String FRIEND_NAME;
+    private String friendName;
 
     @JsonProperty("FRIEND_PHONE")
-    private String FRIEND_PHONE;
+    private String friendPhone;
 }
