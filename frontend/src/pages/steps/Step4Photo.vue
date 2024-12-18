@@ -25,7 +25,7 @@
           @dragover.prevent
           @drop="onDrop($event, file)"
         >
-          <div class="upload-box">
+          <div :class="['upload-box', { error: file.isError }]">
             <div v-if="file.preview">
               <img :src="file.preview" alt="預覽圖片" class="preview-image" />
             </div>
@@ -103,42 +103,42 @@ const fileItems = reactive([
   {
     label: "點此拍照上傳",
     description: "身分證正面",
-    model: step4Data.value.ID_CARD_FRONT,
+    model: "ID_CARD_FRONT",
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "身分證反面",
-    model: step4Data.value.ID_CARD_BACK,
+    model: "ID_CARD_BACK",
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "健保卡",
-    model: step4Data.value.HEALTH_INSURANCE_CARD,
+    model: "HEALTH_INSURANCE_CARD",
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "手持身分證自拍",
-    model: step4Data.value.SELFIE_WITH_ID_CARD,
+    model: "SELFIE_WITH_ID_CARD",
     preview: null,
     required: true,
   },
   {
     label: "點此拍照上傳",
     description: "財力證明",
-    model: step4Data.value.FINANCIAL_PROOF,
+    model: "FINANCIAL_PROOF",
     preview: null,
     required: false,
   },
   {
     label: "點此拍照上傳",
     description: "其他身分證明 (軍/公/教/學生證)",
-    model: step4Data.value.OTHER_DOCUMENT1,
+    model: "OTHER_DOCUMENT1",
     preview: null,
     required: false,
   },
@@ -146,7 +146,6 @@ const fileItems = reactive([
 
 // 方法
 const openSignatureDialog = () => {
-
   isSignatureDialogOpen.value = true;
 };
 
@@ -191,6 +190,7 @@ const onFileChange = (event, file) => {
       // 調用裁剪方法
       const croppedImage = cropImageToSize(image, 300, 150);
       file.preview = croppedImage; // 更新預覽
+      formStore.step4Data[file.model] = croppedImage; // 保存到 store
       console.log("裁剪後的圖片數據: ", file.preview);
     };
 
@@ -213,6 +213,7 @@ const onDrop = (event, file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       file.preview = e.target.result; // 設定圖片的 base64 數據
+      formStore.step4Data[file.model] = croppedImage; // 保存到 store
       console.log("預覽圖片數據: ", file.preview); // 打印看一下
     };
     reader.onerror = () => {
@@ -231,7 +232,7 @@ const onDrop = (event, file) => {
  * @param {number} targetHeight - 目標高度
  * @returns {string} - 回傳裁剪後的 Base64 圖片數據
  */
- const cropImageToSize = (image, targetWidth, targetHeight) => {
+const cropImageToSize = (image, targetWidth, targetHeight) => {
   // 宣告 canvas
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
@@ -261,13 +262,52 @@ const onDrop = (event, file) => {
   }
 
   // 裁剪後的圖片存到canvas
-  ctx.drawImage(image, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+  ctx.drawImage(
+    image,
+    sx,
+    sy,
+    sWidth,
+    sHeight,
+    0,
+    0,
+    targetWidth,
+    targetHeight
+  );
 
   // 回傳裁剪後的 Base64 數據
   return canvas.toDataURL("image/jpeg");
 };
+
+// 檢核必填照片有無上傳
+const validatePhoto = () => {
+  const requiredFiles = [
+    "ID_CARD_FRONT",
+    "ID_CARD_BACK",
+    "HEALTH_INSURANCE_CARD",
+    "SELFIE_WITH_ID_CARD",
+  ];
+
+  const missingFiles = requiredFiles.filter((key) => !step4Data.value[key]);
+
+  fileItems.forEach((file) => {
+    file.isError = missingFiles.includes(file.model);
+  });
+
+  if (missingFiles.length > 0) {
+    const missingLabels = fileItems
+      .filter((file) => missingFiles.includes(file.model))
+      .map((file) => file.description);
+
+    alert(`請上傳以下必填文件：\n${missingLabels.join("\n")}`);
+
+    return false; // 阻止進入下一步
+  }
+  return true;
+};
 const nextStep = () => {
-  formStore.currentStep = "step5";
+  if (validatePhoto()) {
+    formStore.currentStep = "step5";
+  }
 };
 
 const prevStep = () => {
@@ -338,6 +378,10 @@ const prevStep = () => {
   justify-content: flex-start;
   text-align: center;
   padding: 10px;
+}
+
+.upload-box.error {
+  border: 3px solid red;
 }
 
 .upload-box {

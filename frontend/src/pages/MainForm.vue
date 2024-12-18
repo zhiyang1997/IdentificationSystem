@@ -89,11 +89,11 @@ const currentStepTitle = computed(() => stepTitles[formStore.currentStep]);
   background-color: #faf4df; /* 背景色為米色 */
   border-bottom: 2px solid rgba(0, 0, 0, 1); /* 藍色底線，寬度為4px */
   max-width: 700px; /* 設定最大寬度 */
-  margin: 0 auto; /* 居中显示 */
+  margin: 0 auto; /* 居中顯示 */
 }
 
 .custom-page-container {
   max-width: 800px; /* 設定最大寬度 */
-  margin: 0 auto; /* 居中显示 */
+  margin: 0 auto; /* 居中顯示 */
 }
 </style>
