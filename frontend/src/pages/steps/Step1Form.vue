@@ -306,7 +306,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useFormStore } from "../../stores/formStore";
 import PrivacyPolicyDialog from "../PrivacyPolicyDialog.vue";
 import TermsDialog from "../TermsDialog.vue";
@@ -371,14 +371,70 @@ const onlyNumber = (event) => {
   }
 };
 
-// 用於追蹤每個欄位的錯誤狀態
-const errors = ref({ CHECKBOX1: false, CHECKBOX2: false });
+// 錯誤狀態
+const errors = ref({
+  NAME: false,
+  PHONE_NUMBER: false,
+  NATIONAL_ID: false,
+  BIRTHDATE: false,
+  REGISTERED_ADDRESS: false,
+  RELATIVE_NAME1: false,
+  RELATIVE_PHONE1: false,
+  RELATIVE_RELATION1: false,
+  RELATIVE_NAME2: false,
+  RELATIVE_PHONE2: false,
+  RELATIVE_RELATION2: false,
+  FRIEND_NAME: false,
+  FRIEND_PHONE: false,
+  CHECKBOX1: false,
+  CHECKBOX2: false,
+});
+
+// 驗證身分證字號
+const validNationalID = (id) => /^[A-Z][12]\d{8}$/.test(id);
+
+// 驗證手機門號
+const validPhoneNumber = (phone) => /^09\d{8}$/.test(phone);
+
+// 驗證欄位
+const validateField = (field, value) => {
+  switch (field) {
+    case "NAME":
+    case "BIRTHDATE":
+    case "REGISTERED_ADDRESS":
+    case "RELATIVE_NAME1":
+    case "RELATIVE_PHONE1":
+    case "RELATIVE_RELATION1":
+    case "RELATIVE_NAME2":
+    case "RELATIVE_PHONE2":
+    case "RELATIVE_RELATION2":
+    case "FRIEND_NAME":
+    case "FRIEND_PHONE":
+      return !!value; // 檢查是否為空
+    case "NATIONAL_ID":
+      return validNationalID(value);
+    case "PHONE_NUMBER":
+      return validPhoneNumber(value);
+    default:
+      return true;
+  }
+};
+
+// 動態監聽所有欄位
+Object.keys(step1Data.value).forEach((key) => {
+  watch(
+    () => step1Data.value[key],
+    (newValue) => {
+      errors.value[key] = !validateField(key, newValue);
+    }
+  );
+});
 
 // 檢查所有必填欄位
 const validateForm = () => {
-  let isValid = true;
-  const missingFields = [];
-  const invalidFields = [];
+  let isValid = true; // 整體表單有效性
+  const missingFields = []; // 缺少填寫的欄位
+  const invalidFields = []; // 格式錯誤的欄位
 
   // 定義欄位標籤對應
   const fieldLabels = {
@@ -397,36 +453,24 @@ const validateForm = () => {
     FRIEND_PHONE: "朋友電話",
   };
 
-  // 驗證身分證字號
-  const validNationalID = (id) => /^[A-Z][12]\d{8}$/.test(id);
-
-  // 驗證手機門號
-  const validPhoneNumber = (phone) => /^09\d{8}$/.test(phone);
-
   // 遍歷所有欄位，檢查是否有值和格式是否正確
   Object.keys(step1Data.value).forEach((key) => {
     const value = step1Data.value[key];
+    const isFieldValid = validateField(key, value);
 
     if (!value) {
-      // 如果欄位為空
+      // 欄位為空，記錄錯誤
+      missingFields.push(fieldLabels[key]);
       errors.value[key] = true;
       isValid = false;
-      if (value !== false) {
-        missingFields.push(fieldLabels[key]);
-      }
+    } else if (!isFieldValid) {
+      // 格式錯誤，記錄錯誤
+      invalidFields.push(fieldLabels[key]);
+      errors.value[key] = true;
+      isValid = false;
     } else {
-      // 如果欄位有值，進行格式驗證
-      if (key === "NATIONAL_ID" && !validNationalID(value)) {
-        errors.value[key] = true;
-        invalidFields.push(fieldLabels[key]);
-        isValid = false;
-      } else if (key === "PHONE_NUMBER" && !validPhoneNumber(value)) {
-        errors.value[key] = true;
-        invalidFields.push(fieldLabels[key]);
-        isValid = false;
-      } else {
-        errors.value[key] = false; // 清除錯誤狀態
-      }
+      // 清除錯誤狀態
+      errors.value[key] = false;
     }
   });
 
@@ -439,7 +483,6 @@ const validateForm = () => {
     alert(`[${invalidFields.join(", ")}]格式錯誤！`);
   }
 
-  console.log(step1Data.value);
   if (!step1Data.value.CHECKBOX1 || !step1Data.value.CHECKBOX2) {
     alert(
       "請先勾選同意 「隱私權政策」 及 「行動身分識別服務使用者約定條款及隱私權告知條款」。\n以及勾選同意電子簽章"
