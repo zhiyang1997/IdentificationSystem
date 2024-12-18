@@ -258,7 +258,10 @@
     <!-- 勾選框 -->
     <div class="checkbox-container q-mt-md">
       <div class="q-pa-xs q-pr-md">
-        <q-checkbox v-model="val1" />
+        <q-checkbox
+          v-model="val1"
+          :class="{ 'error-border': errors.CHECKBOX1 }"
+        />
       </div>
       <span>
         <span class="required">*</span>我已詳細閱讀並充分了解、同意
@@ -271,7 +274,10 @@
     </div>
     <div class="checkbox-container q-mt-md">
       <div class="q-pa-xs q-pr-md">
-        <q-checkbox v-model="val2" />
+        <q-checkbox
+          v-model="val2"
+          :class="{ 'error-border': errors.CHECKBOX2 }"
+        />
       </div>
       <span
         ><span class="required">*</span
@@ -370,7 +376,7 @@ const onlyNumber = (event) => {
 };
 
 // 用於追蹤每個欄位的錯誤狀態
-const errors = ref({});
+const errors = ref({ CHECKBOX1: false, CHECKBOX2: false });
 
 // 檢查所有必填欄位
 const validateForm = () => {
@@ -426,6 +432,21 @@ const validateForm = () => {
     }
   });
 
+  // 檢查勾選框是否選中
+  if (!val1.value) {
+    errors.value.CHECKBOX1 = true;
+    isValid = false;
+  } else {
+    errors.value.CHECKBOX1 = false;
+  }
+
+  if (!val2.value) {
+    errors.value.CHECKBOX2 = true;
+    isValid = false;
+  } else {
+    errors.value.CHECKBOX2 = false;
+  }
+
   // 顯示錯誤提示
   if (missingFields.length > 0) {
     alert(`仍有[${missingFields.join(", ")}]尚未填寫！`);
@@ -433,6 +454,13 @@ const validateForm = () => {
 
   if (invalidFields.length > 0) {
     alert(`[${invalidFields.join(", ")}]格式錯誤！`);
+  }
+  console.log(val1.value);
+
+  if (!val1.value || !val2.value) {
+    alert(
+      "請先勾選同意 「隱私權政策」 及 「行動身分識別服務使用者約定條款及隱私權告知條款」。\n以及勾選同意電子簽章"
+    );
   }
 
   return isValid;
@@ -443,14 +471,8 @@ const nextStep = async () => {
     // 假设在第一个步骤时发送 OTP
     try {
       if (validateForm()) {
-        if (val1.value && val2.value) {
-          await sendOtpRequest(step1Data.value);
-          formStore.currentStep = "step2";
-        } else {
-          alert(
-            "請先勾選同意 「隱私權政策」 及 「行動身分識別服務使用者約定條款及隱私權告知條款」。\n以及勾選同意電子簽章"
-          );
-        }
+        //await sendOtpRequest(step1Data.value);
+        formStore.currentStep = "step2";
         // 進入下一步邏輯
       }
 
@@ -523,5 +545,9 @@ const sendOtpRequest = async (step1Data) => {
 
 ::v-deep(.q-field--with-bottom) {
   padding-bottom: 0;
+}
+
+.error-border ::v-deep(.q-checkbox__bg) {
+  border-color: red; /* 當有錯誤時外框變紅色 */
 }
 </style>
