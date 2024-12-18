@@ -17,6 +17,8 @@ export const useFormStore = defineStore("form", {
       RELATIVE_PHONE2: "", // 親屬電話2
       FRIEND_NAME: "", // 朋友姓名
       FRIEND_PHONE: "", // 朋友電話
+      CHECKBOX1: false, // 隱私政策勾選狀態
+      CHECKBOX2: false, // 電子簽章勾選狀態
     },
 
     step2Data: {
@@ -51,8 +53,8 @@ export const useFormStore = defineStore("form", {
     },
 
     // 更新 Step2 OTP 資料
-    updateStep2OtpDigit(index, value) {
-      this.step2Data.otpDigits[index] = value;
+    updateStep2Data(index, value) {
+      this.step2Data.OTP_DIGITS[index] = value;
     },
 
     // 更新 Step3 資料
@@ -90,12 +92,14 @@ export const useFormStore = defineStore("form", {
         RELATIVE_PHONE2: "", // 親屬電話2
         FRIEND_NAME: "", // 朋友姓名
         FRIEND_PHONE: "", // 朋友電話
+        CHECKBOX1: false, // 隱私政策勾選狀態
+        CHECKBOX2: false, // 電子簽章勾選狀態
       };
     },
 
     // 清除 Step2 資料
     clearStep2Data() {
-      this.step2Data.otpDigits = Array(6).fill("");
+      this.step2Data.OTP_DIGITS = Array(6).fill("");
     },
 
     // 清除 Step3 資料

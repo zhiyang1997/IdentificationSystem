@@ -258,7 +258,7 @@
     <div class="checkbox-container q-mt-md">
       <div class="q-pa-xs q-pr-md">
         <q-checkbox
-          v-model="val1"
+          v-model="step1Data.CHECKBOX1"
           :class="{ 'error-border': errors.CHECKBOX1 }"
         />
       </div>
@@ -274,7 +274,7 @@
     <div class="checkbox-container q-mt-md">
       <div class="q-pa-xs q-pr-md">
         <q-checkbox
-          v-model="val2"
+          v-model="step1Data.CHECKBOX2"
           :class="{ 'error-border': errors.CHECKBOX2 }"
         />
       </div>
@@ -313,9 +313,6 @@ import TermsDialog from "../TermsDialog.vue";
 
 // 使用 Pinia store
 const formStore = useFormStore();
-
-const val1 = ref(false); // 勾選框1
-const val2 = ref(false); // 勾選框2
 
 const isPrivacyPolicyDialogOpen = ref(false);
 const isTermsDialogOpen = ref(false);
@@ -414,7 +411,9 @@ const validateForm = () => {
       // 如果欄位為空
       errors.value[key] = true;
       isValid = false;
-      missingFields.push(fieldLabels[key]);
+      if (value !== false) {
+        missingFields.push(fieldLabels[key]);
+      }
     } else {
       // 如果欄位有值，進行格式驗證
       if (key === "NATIONAL_ID" && !validNationalID(value)) {
@@ -431,21 +430,6 @@ const validateForm = () => {
     }
   });
 
-  // 檢查勾選框是否選中
-  if (!val1.value) {
-    errors.value.CHECKBOX1 = true;
-    isValid = false;
-  } else {
-    errors.value.CHECKBOX1 = false;
-  }
-
-  if (!val2.value) {
-    errors.value.CHECKBOX2 = true;
-    isValid = false;
-  } else {
-    errors.value.CHECKBOX2 = false;
-  }
-
   // 顯示錯誤提示
   if (missingFields.length > 0) {
     alert(`仍有[${missingFields.join(", ")}]尚未填寫！`);
@@ -454,9 +438,9 @@ const validateForm = () => {
   if (invalidFields.length > 0) {
     alert(`[${invalidFields.join(", ")}]格式錯誤！`);
   }
-  console.log(val1.value);
 
-  if (!val1.value || !val2.value) {
+  console.log(step1Data.value);
+  if (!step1Data.value.CHECKBOX1 || !step1Data.value.CHECKBOX2) {
     alert(
       "請先勾選同意 「隱私權政策」 及 「行動身分識別服務使用者約定條款及隱私權告知條款」。\n以及勾選同意電子簽章"
     );
