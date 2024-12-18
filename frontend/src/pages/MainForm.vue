@@ -39,6 +39,7 @@
           </q-step>
         </q-stepper>
       </q-page>
+      <div class="copy-right"><b>© 2024 XXX股份有限公司 版權所有</b></div>
     </q-page-container>
   </q-layout>
 </template>
@@ -95,5 +96,16 @@ const currentStepTitle = computed(() => stepTitles[formStore.currentStep]);
 .custom-page-container {
   max-width: 800px; /* 設定最大寬度 */
   margin: 0 auto; /* 居中顯示 */
+}
+
+.copy-right {
+  text-align: center; /* 文本水平居中 */
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  height: 30px; /* 可根據需求調整高度 */
+  margin-bottom: 10px;
+  font-size: 14px; /* 字體大小 */
+  color: #5F5F5F;
 }
 </style>
