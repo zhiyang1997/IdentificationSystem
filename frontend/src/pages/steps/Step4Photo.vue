@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { computed, ref, reactive } from "vue";
+import { computed, ref, watch } from "vue";
 import SignaturePad from "../../components/SignaturePad.vue"; // 簽名板組件
 import { useFormStore } from "../../stores/formStore";
 
@@ -99,7 +99,7 @@ const signatureImage = ref(null); // 儲存簽名圖片
 const signaturePad = ref(null); // 獲取簽名板實例
 
 // 文件上傳項目配置
-const fileItems = reactive([
+const fileItems = ref([
   {
     label: "點此拍照上傳",
     description: "身分證正面",
@@ -278,32 +278,63 @@ const cropImageToSize = (image, targetWidth, targetHeight) => {
   return canvas.toDataURL("image/jpeg");
 };
 
+// 錯誤狀態
+const errors = ref({
+  ID_CARD_FRONT: false,
+  ID_CARD_BACK: false,
+  HEALTH_INSURANCE_CARD: false,
+  SELFIE_WITH_ID_CARD: false,
+});
+
+// 必填字段
+const requiredFiles = [
+  "ID_CARD_FRONT",
+  "ID_CARD_BACK",
+  "HEALTH_INSURANCE_CARD",
+  "SELFIE_WITH_ID_CARD",
+];
+
+// 動態監聽
+requiredFiles.forEach((field) => {
+  watch(
+    () => step4Data.value[field], // 監聽 step4Data 的變化
+    (newValue) => {
+      errors[field] = !newValue; // 如果值為空，更新錯誤狀態
+      updateFileErrorState(field, !newValue); // 同步更新 fileItems 中的 isError
+    }
+  );
+});
+
+// 更新 fileItems 的错误状态
+const updateFileErrorState = (field, isError) => {
+  const fileItem = fileItems.value.find((file) => file.model === field);
+  if (fileItem) {
+    fileItem.isError = isError;
+  }
+};
+
 // 檢核必填照片有無上傳
 const validatePhoto = () => {
-  const requiredFiles = [
-    "ID_CARD_FRONT",
-    "ID_CARD_BACK",
-    "HEALTH_INSURANCE_CARD",
-    "SELFIE_WITH_ID_CARD",
-  ];
-
+  // 檢查所有必填字段
   const missingFiles = requiredFiles.filter((key) => !step4Data.value[key]);
 
-  fileItems.forEach((file) => {
-    file.isError = missingFiles.includes(file.model);
+  // 更新文件項的錯誤狀態
+  fileItems.value.forEach((file) => {
+    file.isError = missingFiles.includes(file.model); // 文件的 `model` 字段應該對應 step4Data 的鍵
   });
 
   if (missingFiles.length > 0) {
-    const missingLabels = fileItems
+    // 生成錯誤提示
+    const missingLabels = fileItems.value
       .filter((file) => missingFiles.includes(file.model))
       .map((file) => file.description);
 
     alert(`請上傳以下必填文件：\n${missingLabels.join("\n")}`);
-
     return false; // 阻止進入下一步
   }
   return true;
 };
+
 const nextStep = () => {
   if (validatePhoto()) {
     formStore.currentStep = "step5";
