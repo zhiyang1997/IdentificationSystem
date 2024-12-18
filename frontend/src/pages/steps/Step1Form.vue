@@ -54,7 +54,6 @@
         placeholder="請輸入有效之身分證字號"
         style="width: 100%"
         maxlength="10"
-        :style="inputStyle"
         :error="errors.NATIONAL_ID"
       />
       <span
