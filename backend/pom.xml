@@ -103,6 +103,14 @@
 			<version>8.30.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.sourceforge.tess4j</groupId>
+			<artifactId>tess4j</artifactId>
+			<version>5.7.0</version> <!-- 請選擇最新版 -->
+		</dependency>
+
+		
+
 	</dependencies>
 
 	<build>
