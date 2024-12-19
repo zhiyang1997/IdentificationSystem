@@ -2,7 +2,9 @@
   <q-form @submit.prevent="nextStep" @validation-error="showErrors">
     <!-- 姓名 -->
     <div class="q-form-row q-mb-md">
-      <label class="block q-mb-md">姓名<span class="required">*</span></label>
+      <label class="block" style="font-size: medium"
+        >姓名<span class="required">*</span></label
+      >
       <q-input
         dense
         filled
@@ -13,9 +15,10 @@
       />
       <span class="custom-error" v-if="errors.NAME">請填寫姓名</span>
     </div>
+
     <!-- 手機門號 -->
     <div class="q-form-row q-mb-md">
-      <label class="block q-mb-md"
+      <label class="block" style="font-size: medium"
         >手機門號<span class="required">*</span></label
       >
       <q-input
@@ -23,7 +26,7 @@
         filled
         v-model="step1Data.PHONE_NUMBER"
         type="tel"
-        placeholder="填入格式：012345678(共十碼)"
+        placeholder="填入格式：0912345678(共10碼)"
         style="width: 100%"
         maxlength="10"
         @input="limitLength"
@@ -42,9 +45,33 @@
       >
     </div>
 
+    <!-- 手機門號 -->
+    <div class="q-form-row q-mb-md">
+      <label class="block" style="font-size: medium"
+        >市內電話<span class="required">*</span></label
+      >
+      <q-input
+        dense
+        filled
+        v-model="step1Data.TEL_NUMBER"
+        type="tel"
+        placeholder="填入格式：021234567(共9碼)"
+        style="width: 100%"
+        maxlength="9"
+        @input="limitLength"
+        @keypress="onlyNumber($event)"
+        :error="errors.TEL_NUMBER"
+      />
+      <span
+        class="custom-error"
+        v-if="errors.TEL_NUMBER && !step1Data.TEL_NUMBER"
+        >請填寫市內電話</span
+      >
+    </div>
+
     <!-- 身分證字號 -->
     <div class="q-form-row q-mb-md">
-      <label class="block q-mb-md"
+      <label class="block" style="font-size: medium"
         >身分證字號<span class="required">*</span></label
       >
       <q-input
@@ -70,7 +97,7 @@
 
     <!-- 出生日期 -->
     <div class="q-form-row q-mb-md">
-      <label class="block q-mb-md"
+      <label class="block" style="font-size: medium"
         >出生日期<span class="required">*</span
         ><q-icon name="event" class="cursor-pointer" @click="showCalendar"
       /></label>
@@ -97,9 +124,27 @@
       </q-popup-proxy>
     </div>
 
+    <!-- 現居地址 -->
+    <div class="q-form-row q-mb-md">
+      <label class="block" style="font-size: medium"
+        >現居地址<span class="required">*</span></label
+      >
+      <q-input
+        dense
+        filled
+        v-model="step1Data.REGISTERED_ADDRESS_NOW"
+        placeholder="請輸入現居地址"
+        style="width: 100%"
+        :error="errors.REGISTERED_ADDRESS_NOW"
+      />
+      <span class="custom-error" v-if="errors.REGISTERED_ADDRESS_NOW"
+        >請填寫現居地址</span
+      >
+    </div>
+
     <!-- 戶籍地址 -->
     <div class="q-form-row q-mb-md">
-      <label class="block q-mb-md"
+      <label class="block" style="font-size: medium"
         >戶籍地址<span class="required">*</span></label
       >
       <q-input
@@ -118,7 +163,7 @@
     <!-- 親屬1 -->
     <div class="q-form-row q-mb-md flex-row">
       <div class="input-group">
-        <label class="block q-mb-md"
+        <label class="block" style="font-size: medium"
           >親屬姓名1<span class="required">*</span></label
         >
         <q-input
@@ -134,7 +179,7 @@
         >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md"
+        <label class="block" style="font-size: medium"
           >親屬電話1<span class="required">*</span></label
         >
         <q-input
@@ -150,7 +195,7 @@
         >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md"
+        <label class="block" style="font-size: medium"
           >親屬關係1<span class="required">*</span></label
         >
         <q-input
@@ -170,7 +215,7 @@
     <!-- 親屬2 -->
     <div class="q-form-row q-mb-md flex-row">
       <div class="input-group">
-        <label class="block q-mb-md"
+        <label class="block" style="font-size: medium"
           >親屬姓名2<span class="required">*</span></label
         >
         <q-input
@@ -186,7 +231,7 @@
         >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md"
+        <label class="block" style="font-size: medium"
           >親屬電話2<span class="required">*</span></label
         >
         <q-input
@@ -202,7 +247,7 @@
         >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md"
+        <label class="block" style="font-size: medium"
           >親屬關係2<span class="required">*</span></label
         >
         <q-input
@@ -222,36 +267,24 @@
     <!-- 朋友 -->
     <div class="q-form-row q-mb-md flex-row">
       <div class="input-group">
-        <label class="block q-mb-md"
-          >朋友姓名<span class="required">*</span></label
-        >
+        <label class="block" style="font-size: medium">朋友姓名</label>
         <q-input
           dense
           filled
           v-model="step1Data.FRIEND_NAME"
           placeholder="請輸入朋友姓名"
           style="width: 100%"
-          :error="errors.FRIEND_NAME"
         />
-        <span class="custom-error" v-if="errors.FRIEND_NAME"
-          >請填寫朋友姓名</span
-        >
       </div>
       <div class="input-group">
-        <label class="block q-mb-md"
-          >朋友電話<span class="required">*</span></label
-        >
+        <label class="block" style="font-size: medium">朋友電話</label>
         <q-input
           dense
           filled
           v-model="step1Data.FRIEND_PHONE"
           placeholder="請輸入朋友電話"
           style="width: 100%"
-          :error="errors.FRIEND_PHONE"
         />
-        <span class="custom-error" v-if="errors.FRIEND_PHONE"
-          >請填寫朋友電話</span
-        >
       </div>
     </div>
     <!-- 勾選框 -->
@@ -375,8 +408,10 @@ const onlyNumber = (event) => {
 const errors = ref({
   NAME: false,
   PHONE_NUMBER: false,
+  TEL_NUMBER: false,
   NATIONAL_ID: false,
   BIRTHDATE: false,
+  REGISTERED_ADDRESS_NOW: false,
   REGISTERED_ADDRESS: false,
   RELATIVE_NAME1: false,
   RELATIVE_PHONE1: false,
@@ -401,20 +436,24 @@ const validateField = (field, value) => {
   switch (field) {
     case "NAME":
     case "BIRTHDATE":
+    case "REGISTERED_ADDRESS_NOW":
     case "REGISTERED_ADDRESS":
     case "RELATIVE_NAME1":
     case "RELATIVE_PHONE1":
     case "RELATIVE_RELATION1":
     case "RELATIVE_NAME2":
     case "RELATIVE_PHONE2":
-    case "RELATIVE_RELATION2":
     case "FRIEND_NAME":
     case "FRIEND_PHONE":
+    case "CHECKBOX1":
+    case "CHECKBOX2":
+    case "RELATIVE_RELATION2":
       return !!value; // 檢查是否為空
     case "NATIONAL_ID":
       return validNationalID(value);
     case "PHONE_NUMBER":
       return validPhoneNumber(value);
+    case "TEL_NUMBER":
     default:
       return true;
   }
@@ -440,8 +479,10 @@ const validateForm = () => {
   const fieldLabels = {
     NAME: "姓名",
     PHONE_NUMBER: "手機門號",
+    TEL_NUMBER: "市內電話",
     NATIONAL_ID: "身分證字號",
     BIRTHDATE: "出生日期",
+    REGISTERED_ADDRESS_NOW: "現居地址",
     REGISTERED_ADDRESS: "戶籍地址",
     RELATIVE_NAME1: "親屬姓名1",
     RELATIVE_PHONE1: "親屬電話1",
@@ -451,41 +492,59 @@ const validateForm = () => {
     RELATIVE_RELATION2: "親屬關係2",
     FRIEND_NAME: "朋友姓名",
     FRIEND_PHONE: "朋友電話",
+    CHECKBOX1: "勾選框1",
+    CHECKBOX2: "勾選框2",
   };
 
   // 遍歷所有欄位，檢查是否有值和格式是否正確
   Object.keys(step1Data.value).forEach((key) => {
     const value = step1Data.value[key];
+    const fieldLabel = fieldLabels[key];
     const isFieldValid = validateField(key, value);
 
+    // 非必填欄位
+    if (["朋友姓名", "朋友電話"].includes(fieldLabel)) {
+      return;
+    }
+
+    // 初始化錯誤狀態為 false
+    errors.value[key] = false;
+
+    // 檢查是否為必填且為空
     if (!value) {
-      // 欄位為空，記錄錯誤
-      missingFields.push(fieldLabels[key]);
+      if (["勾選框1", "勾選框2"].includes(fieldLabel)) {
+        // 另外處理
+        errors.value[key] = true;
+        isValid = false;
+      } else {
+        missingFields.push(fieldLabel);
+        errors.value[key] = true;
+        isValid = false;
+      }
+      return; // 跳过后续检查
+    }
+
+    // 檢查格式是否正確
+    if (!isFieldValid) {
+      invalidFields.push(fieldLabel);
       errors.value[key] = true;
       isValid = false;
-    } else if (!isFieldValid) {
-      // 格式錯誤，記錄錯誤
-      invalidFields.push(fieldLabels[key]);
-      errors.value[key] = true;
-      isValid = false;
-    } else {
-      // 清除錯誤狀態
-      errors.value[key] = false;
     }
   });
 
+  console.log(missingFields);
   // 顯示錯誤提示
   if (missingFields.length > 0) {
-    alert(`仍有[${missingFields.join(", ")}]尚未填寫！`);
+    alert(`仍有[${missingFields.join("\n")}]尚未填寫！`);
   }
 
   if (invalidFields.length > 0) {
-    alert(`[${invalidFields.join(", ")}]格式錯誤！`);
+    alert(`[${invalidFields.join("\n")}]格式錯誤！`);
   }
 
   if (!step1Data.value.CHECKBOX1 || !step1Data.value.CHECKBOX2) {
     alert(
-      "請先勾選同意 「隱私權政策」 及 「行動身分識別服務使用者約定條款及隱私權告知條款」。\n以及勾選同意電子簽章"
+      "請先勾選同意 「隱私權政策」 及 「行動身分識別服務使用者約定條款及隱私權告知條款」。\n同意電子簽章。"
     );
   }
 
