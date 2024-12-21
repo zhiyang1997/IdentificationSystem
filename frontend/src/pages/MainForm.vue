@@ -86,26 +86,60 @@ const currentStepTitle = computed(() => stepTitles[formStore.currentStep]);
 
 <style scoped>
 .custom-header {
-  color: black;
-  background-color: #faf4df; /* 背景色為米色 */
-  border-bottom: 2px solid rgba(0, 0, 0, 1); /* 藍色底線，寬度為4px */
-  max-width: 700px; /* 設定最大寬度 */
-  margin: 0 auto; /* 居中顯示 */
+  color: #4A4A4A; /* 深灰色字體，清晰且溫和 */
+  background-color: #F2C86E; /* 固定米黃色背景 */
+  border-bottom: 3px solid #333333; /* 深灰底線，增強視覺層次 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加輕微陰影 */
+  padding: 20px 0; /* 增加內邊距 */
+}
+
+.custom-header h6 {
+  font-size: 24px; /* 更改字體大小 */
+  color: #5F5F5F; /* 深灰字體顏色 */
+  font-weight: bolder; /* 字體加粗 */
+  margin: 10px 0; /* 移除多餘的上下間距 */
+  text-align: center; /* 水平居中對齊 */
 }
 
 .custom-page-container {
-  max-width: 800px; /* 設定最大寬度 */
-  margin: 0 auto; /* 居中顯示 */
+  max-width: 800px; /* 固定寬度 */
+  margin: 0 auto; /* 水平居中 */
+
+}
+
+.q-stepper {
+  padding-top: 10px;
+  --q-color-stepper-done: #F2C86E; /* 已完成的步驟顏色 */
+  --q-color-stepper-active: #007BFF; /* 當前步驟顏色，強調的藍色 */
+  --q-color-stepper-inactive: #B0B0B0; /* 未完成步驟的顏色，淺灰 */
+  --q-color-stepper-done-bg: #FFFFFF; /* 已完成的背景色 */
+  --q-color-stepper-active-bg: #F2C86E; /* 當前步驟的背景色 */
 }
 
 .copy-right {
-  text-align: center; /* 文本水平居中 */
-  display: flex; /* 使用 Flexbox 布局 */
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  height: 30px; /* 可根據需求調整高度 */
-  margin-bottom: 10px;
-  font-size: 14px; /* 字體大小 */
-  color: #5F5F5F;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* 與主體保持較大距離 */
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #7A7A7A; /* 使用中灰色，柔和不刺眼 */
+}
+
+.q-stepper__nav {
+  margin-top: 30px; /* 增加與步驟條的距離 */
+}
+
+.q-stepper__step--active {
+  background-color: #F2C86E; /* 當前步驟點的米黃色背景 */
+  border-radius: 50%; /* 確保步驟點為圓形 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* 添加柔和陰影 */
+  border: 2px solid #FFFFFF; /* 白色邊框，增強對比 */
+}
+
+.q-stepper__step--inactive {
+  border-radius: 50%;
+  background-color: #E0E0E0; /* 未完成步驟的背景色 */
 }
 </style>
