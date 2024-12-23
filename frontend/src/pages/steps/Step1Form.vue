@@ -53,18 +53,18 @@
       <q-input
         dense
         filled
-        v-model="step1Data.TEL_NUMBER"
+        v-model="step1Data.LANDLINE_PHONE"
         type="tel"
         placeholder="填入格式：021234567(共9碼)"
         style="width: 100%"
         maxlength="9"
         @input="limitLength"
         @keypress="onlyNumber($event)"
-        :error="errors.TEL_NUMBER"
+        :error="errors.LANDLINE_PHONE"
       />
       <span
         class="custom-error"
-        v-if="errors.TEL_NUMBER && !step1Data.TEL_NUMBER"
+        v-if="errors.LANDLINE_PHONE && !step1Data.LANDLINE_PHONE"
         >請填寫市內電話</span
       >
     </div>
@@ -124,21 +124,21 @@
       </q-popup-proxy>
     </div>
 
-    <!-- 現居地址 -->
+    <!-- 通訊地址 -->
     <div class="q-form-row q-mb-md">
       <label class="block" style="font-size: medium"
-        >現居地址<span class="required">*</span></label
+        >通訊地址<span class="required">*</span></label
       >
       <q-input
         dense
         filled
-        v-model="step1Data.REGISTERED_ADDRESS_NOW"
-        placeholder="請輸入現居地址"
+        v-model="step1Data.COMMUNICATION_ADDRESS"
+        placeholder="請輸入通訊地址"
         style="width: 100%"
-        :error="errors.REGISTERED_ADDRESS_NOW"
+        :error="errors.COMMUNICATION_ADDRESS"
       />
-      <span class="custom-error" v-if="errors.REGISTERED_ADDRESS_NOW"
-        >請填寫現居地址</span
+      <span class="custom-error" v-if="errors.COMMUNICATION_ADDRESS"
+        >請填寫通訊地址</span
       >
     </div>
 
@@ -171,7 +171,7 @@
           filled
           v-model="step1Data.RELATIVE_NAME1"
           placeholder="請輸入親屬姓名"
-          style="width: 100%"
+          style="max-width: 180px"
           :error="errors.RELATIVE_NAME1"
         />
         <span class="custom-error" v-if="errors.RELATIVE_NAME1"
@@ -187,7 +187,7 @@
           filled
           v-model="step1Data.RELATIVE_PHONE1"
           placeholder="請輸入親屬電話"
-          style="width: 100%"
+          style="max-width: 180px"
           :error="errors.RELATIVE_PHONE1"
         />
         <span class="custom-error" v-if="errors.RELATIVE_PHONE1"
@@ -203,7 +203,7 @@
           filled
           v-model="step1Data.RELATIVE_RELATION1"
           placeholder="請輸入親屬關係"
-          style="width: 100%"
+          style="max-width: 180px"
           :error="errors.RELATIVE_RELATION1"
         />
         <span class="custom-error" v-if="errors.RELATIVE_RELATION1"
@@ -223,7 +223,7 @@
           filled
           v-model="step1Data.RELATIVE_NAME2"
           placeholder="請輸入親屬姓名"
-          style="width: 100%"
+          style="max-width: 180px"
           :error="errors.RELATIVE_NAME2"
         />
         <span class="custom-error" v-if="errors.RELATIVE_NAME2"
@@ -239,7 +239,7 @@
           filled
           v-model="step1Data.RELATIVE_PHONE2"
           placeholder="請輸入親屬電話"
-          style="width: 100%"
+          style="max-width: 180px"
           :error="errors.RELATIVE_PHONE2"
         />
         <span class="custom-error" v-if="errors.RELATIVE_PHONE2"
@@ -250,16 +250,20 @@
         <label class="block" style="font-size: medium"
           >親屬關係2<span class="required">*</span></label
         >
-        <q-input
+        <q-select
           dense
           filled
           v-model="step1Data.RELATIVE_RELATION2"
-          placeholder="請輸入親屬關係"
-          style="width: 100%"
+          :options="relationOptions"
+          style="max-width: 200px"
           :error="errors.RELATIVE_RELATION2"
+          emit-value
+          map-options
+          transition-show="scale"
+          transition-hide="scale"
         />
         <span class="custom-error" v-if="errors.RELATIVE_RELATION2"
-          >請填寫親屬關係</span
+          >請選擇親屬關係</span
         >
       </div>
     </div>
@@ -273,7 +277,7 @@
           filled
           v-model="step1Data.FRIEND_NAME"
           placeholder="請輸入朋友姓名"
-          style="width: 100%"
+          style="max-width: 180px"
         />
       </div>
       <div class="input-group">
@@ -283,7 +287,7 @@
           filled
           v-model="step1Data.FRIEND_PHONE"
           placeholder="請輸入朋友電話"
-          style="width: 100%"
+          style="max-width: 180px"
         />
       </div>
     </div>
@@ -408,10 +412,10 @@ const onlyNumber = (event) => {
 const errors = ref({
   NAME: false,
   PHONE_NUMBER: false,
-  TEL_NUMBER: false,
+  LANDLINE_PHONE: false,
   NATIONAL_ID: false,
   BIRTHDATE: false,
-  REGISTERED_ADDRESS_NOW: false,
+  COMMUNICATION_ADDRESS: false,
   REGISTERED_ADDRESS: false,
   RELATIVE_NAME1: false,
   RELATIVE_PHONE1: false,
@@ -436,7 +440,7 @@ const validateField = (field, value) => {
   switch (field) {
     case "NAME":
     case "BIRTHDATE":
-    case "REGISTERED_ADDRESS_NOW":
+    case "COMMUNICATION_ADDRESS":
     case "REGISTERED_ADDRESS":
     case "RELATIVE_NAME1":
     case "RELATIVE_PHONE1":
@@ -453,7 +457,7 @@ const validateField = (field, value) => {
       return validNationalID(value);
     case "PHONE_NUMBER":
       return validPhoneNumber(value);
-    case "TEL_NUMBER":
+    case "LANDLINE_PHONE":
     default:
       return true;
   }
@@ -479,10 +483,10 @@ const validateForm = () => {
   const fieldLabels = {
     NAME: "姓名",
     PHONE_NUMBER: "手機門號",
-    TEL_NUMBER: "市內電話",
+    LANDLINE_PHONE: "市內電話",
     NATIONAL_ID: "身分證字號",
     BIRTHDATE: "出生日期",
-    REGISTERED_ADDRESS_NOW: "現居地址",
+    COMMUNICATION_ADDRESS: "通訊地址",
     REGISTERED_ADDRESS: "戶籍地址",
     RELATIVE_NAME1: "親屬姓名1",
     RELATIVE_PHONE1: "親屬電話1",
@@ -580,6 +584,13 @@ const sendOtpRequest = async (step1Data) => {
     console.log("發送 OTP驗證碼 失敗:", error);
   }
 };
+
+/* 下拉選單資料 */
+const relationOptions = [
+  { label: "請選擇親屬關係", value: "" }, // 預設為空字符串
+  { label: "親屬", value: "親屬" },
+  { label: "朋友", value: "朋友" },
+];
 </script>
 
 <style scoped>
