@@ -52,9 +52,10 @@
       >
       <q-select
         dense
+        clearable
         filled
         v-model="step3Data.INSTALLMENT_MONTHS"
-        :options="[3, 6, 12, 24]"
+        :options="[3, 6, 9, 12, 15, 18, 21, 24]"
         style="width: 100%"
         :error="errors.INSTALLMENT_MONTHS"
         @update:model-value="errors.INSTALLMENT_MONTHS = false"
@@ -62,6 +63,19 @@
       <span class="custom-error" v-if="errors.INSTALLMENT_MONTHS"
         >請選擇分期期數</span
       >
+    </div>
+
+    <!-- 期付金額 -->
+    <div class="q-form-row q-mb-md">
+      <label class="block q-mb-md">期付金額</label>
+      <q-input
+        dense
+        filled
+        placeholder="期付金額"
+        v-model="step3Data.INSTALLMENT_AMOUNT"
+        readonly
+        style="width: 100%; background-color: #f5f5f5"
+      />
     </div>
 
     <!-- Email -->
@@ -115,7 +129,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useFormStore } from "../../stores/formStore";
 
 // 使用 Pinia 的 store
@@ -141,6 +155,47 @@ const errors = ref({
   EMAIL: false,
   AVAILABLE_TIME: false,
 });
+
+// 監聽 `PRODUCT_PRICE` 和 `INSTALLMENT_MONTHS`，自動計算 `INSTALLMENT_AMOUNT`
+watch(
+  [
+    () => step3Data.value.PRODUCT_PRICE,
+    () => step3Data.value.INSTALLMENT_MONTHS,
+  ],
+  ([productPrice, months]) => {
+    // 若欄位有錯誤，清空 INSTALLMENT_AMOUNT
+    if (errors.value.PRODUCT_PRICE || errors.value.INSTALLMENT_MONTHS) {
+      step3Data.value.INSTALLMENT_AMOUNT = "";
+      return;
+    }
+
+    if (productPrice && months) {
+      // 1. 確保 `productPrice` 和 `months` 為數字
+      const price = Number(productPrice);
+      const term = Number(months);
+
+      // 2. 定義不同分期期數的利率
+      const interestRates = {
+        3: 0.02,
+        6: 0.0167,
+        9: 0.0142,
+        12: 0.0125,
+        24: 0.0132,
+      };
+
+      // 3. 取得對應的利率（如果沒有對應值則默認 0）
+      const rate = interestRates[term] || 0;
+
+      // 4. 計算總成本
+      const totalCost = price + price * rate * term;
+
+      // 5. 計算每期應繳金額，四捨五入到個位數
+      step3Data.value.INSTALLMENT_AMOUNT = Math.round(totalCost / term);
+    } else {
+      step3Data.value.INSTALLMENT_AMOUNT = ""; // 若金額或分期期數未選，清空
+    }
+  }
+);
 
 // 驗證產品金額
 const validateProductPrice = () => {
