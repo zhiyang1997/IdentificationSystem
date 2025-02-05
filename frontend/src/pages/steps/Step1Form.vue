@@ -97,31 +97,44 @@
 
     <!-- 出生日期 -->
     <div class="q-form-row q-mb-md">
-      <label class="block" style="font-size: medium"
-        >出生日期<span class="required">*</span
-        ><q-icon name="event" class="cursor-pointer" @click="showCalendar"
-      /></label>
+      <label class="block" style="font-size: medium">
+        出生日期<span class="required">*</span>
+      </label>
+
       <q-input
         dense
         filled
         v-model="step1Data.BIRTHDATE"
-        placeholder="請從小月曆選擇出生日期"
+        placeholder="請輸入出生日期"
         style="width: 100%"
         :error="errors.BIRTHDATE"
-      />
-      <span class="custom-error" v-if="errors.BIRTHDATE">請填寫出生日期</span>
-      <!-- 小月曆彈窗 -->
-      <q-popup-proxy
-        v-model="calendar"
-        transition-show="scale"
-        transition-hide="scale"
+        readonly
       >
-        <q-date
-          v-model="step1Data.BIRTHDATE"
-          mask="YYYY-MM-DD"
-          @click="showCalendar"
-        />
-      </q-popup-proxy>
+        <!-- 让小图示能触发日历 -->
+        <template v-slot:append>
+          <q-icon
+            name="event"
+            class="cursor-pointer"
+            @click="calendar = !calendar"
+          />
+        </template>
+
+        <!-- 小月历弹窗，target 自动对齐 q-input -->
+        <q-popup-proxy
+          v-model="calendar"
+          transition-show="scale"
+          transition-hide="scale"
+          ref="calendarPopup"
+        >
+          <q-date
+            v-model="step1Data.BIRTHDATE"
+            mask="YYYY-MM-DD"
+            @update:model-value="calendar = false"
+          />
+        </q-popup-proxy>
+      </q-input>
+
+      <span class="custom-error" v-if="errors.BIRTHDATE">請填寫出生日期</span>
     </div>
 
     <!-- 通訊地址 -->
@@ -645,5 +658,17 @@ const relationOptions = [
 
 .error-border ::v-deep(.q-checkbox__bg) {
   border-color: red; /* 當有錯誤時外框變紅色 */
+}
+
+/* 限制 q-popup-proxy 的最大寬度 */
+::v-deep(.custom-popup) {
+  min-width: auto !important;
+  max-width: 300px !important; /* 限制彈出框的大小 */
+}
+
+/* 限制 q-date 的寬度 */
+::v-deep(.q-date) {
+  min-width: auto !important;
+  max-width: 300px !important; /* 讓日曆只佔左側 */
 }
 </style>
