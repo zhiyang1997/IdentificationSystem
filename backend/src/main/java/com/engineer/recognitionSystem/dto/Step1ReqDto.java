@@ -13,6 +13,9 @@ public class Step1ReqDto {
     @JsonProperty("PHONE_NUMBER")
     private String phoneNumber;
 
+    @JsonProperty("LANDLINE_PHONE")
+    private String landlinePhone;
+
     @JsonProperty("NATIONAL_ID")
     private String nationalId;
 
@@ -21,6 +24,9 @@ public class Step1ReqDto {
 
     @JsonProperty("REGISTERED_ADDRESS")
     private String registeredAddress;
+
+    @JsonProperty("COMMUNICATION_ADDRESS")
+    private String communicationAddress;
 
     @JsonProperty("RELATIVE_NAME1")
     private String relativeName1;

@@ -4,10 +4,10 @@ import { defineStore } from "pinia";
 const initialStep1Data = {
   NAME: "", // 姓名
   PHONE_NUMBER: "", // 手機號碼
-  TEL_NUMBER: "", // 市內電話
+  LANDLINE_PHONE: "", // 市內電話
   NATIONAL_ID: "", // 身分證字號
   BIRTHDATE: "", // 生日
-  REGISTERED_ADDRESS_NOW: "", // 現居地址
+  COMMUNICATION_ADDRESS: "", // 通訊地址
   REGISTERED_ADDRESS: "", // 戶籍地址
   RELATIVE_NAME1: "", // 親屬姓名1
   RELATIVE_RELATION1: "", // 親屬關係1
